@@ -90,7 +90,7 @@ Route::prefix('admin')
     ->middleware(['auth'])
     ->group(function () {
 
-        Route::view('/dashboard', 'admin.dashboard.index')->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('layanan', AdminLayanan::class);
         Route::resource('pelanggan', AdminPelanggan::class);
