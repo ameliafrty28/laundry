@@ -14,7 +14,7 @@ class RekapController extends Controller
     ->select(
         DB::raw('DATE(t.transaksi_tanggal) as tanggal'),
         DB::raw('SUM(CASE WHEN l.layanan_jenis = "reguler" THEN 1 ELSE 0 END) as total_reguler'),
-        DB::raw('SUM(CASE WHEN l.layanan_jenis = "ekspres" THEN 1 ELSE 0 END) as total_ekspres'),
+        DB::raw('SUM(CASE WHEN l.layanan_jenis = "expres" THEN 1 ELSE 0 END) as total_ekspres'),
         DB::raw('SUM(CASE WHEN l.layanan_jenis = "satuan" THEN 1 ELSE 0 END) as total_satuan'),
         DB::raw('SUM(d.detail_berat) as total_berat'),
         DB::raw('SUM(t.transaksi_total) as total_pendapatan')
