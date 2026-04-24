@@ -10,6 +10,7 @@
 <form action="{{ route('kasir.transaksi.store') }}" method="POST">
 @csrf
 
+<input type="hidden" name="transaksi_tanggal" value="{{ $transaksi_tanggal }}">
 <input type="hidden" name="pelanggan_id" value="{{ $pelanggan_id }}">
 <input type="hidden" name="total" value="{{ $total }}">
 

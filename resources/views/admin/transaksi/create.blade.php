@@ -14,19 +14,32 @@
 <div class="mb-3">
     <label>Pelanggan</label>
 
+    <div class="mb-3">
+        <label>Tanggal Transaksi</label>
+        <input type="date" name="transaksi_tanggal" 
+            class="form-control @error('transaksi_tanggal') is-invalid @enderror"
+            value="{{ old('transaksi_tanggal') }}" required>
+
+        @error('transaksi_tanggal')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+        @enderror
+    </div>
     <div class="d-flex gap-2">
-        <select name="pelanggan_id" class="form-control" required>
-            <option value="">-- Pilih Pelanggan --</option>
+        <select name="pelanggan_id" class="form-control select2" required>
+            <option value="">-- Pilih atau ketik nama pelanggan --</option>
 
             @foreach($pelanggan as $p)
             <option value="{{ $p->pelanggan_id }}"
                 {{ (isset($selectedPelanggan) && $selectedPelanggan == $p->pelanggan_id) ? 'selected' : '' }}>
                 {{ $p->pelanggan_nama }}
+                {{ $p->pelanggan_wa ? ' - '.$p->pelanggan_wa : '' }}
             </option>
             @endforeach
         </select>
 
-        <!-- 🔥 tombol tambah pelanggan -->
+        <!-- tombol tambah pelanggan -->
         <a href="/admin/pelanggan/create?redirect=transaksi" class="btn btn-success">
             +
         </a>
@@ -62,7 +75,7 @@
 
 <td class="text-center">
 <button type="button" class="btn btn-danger btn-sm" onclick="hapus(this)">
-    <i class="bi bi-trash"></i>
+    🗑
 </button>
 </td>
 </tr>
@@ -87,13 +100,37 @@
 </div>
 </div>
 
+@endsection
+
+
+@section('scripts')
+
+<!-- JQUERY -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- SELECT2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "-- Pilih atau ketik pelanggan --",
+        allowClear: true,
+        width: '100%'
+    });
+});
+
+// tambah baris layanan
 function tambah(){
     let row = document.querySelector('#body tr').cloneNode(true);
-    row.querySelectorAll('input').forEach(i=>i.value='');
+
+    row.querySelectorAll('input').forEach(i => i.value = '');
+
     document.getElementById('body').appendChild(row);
 }
 
+// hapus baris
 function hapus(btn){
     if(document.querySelectorAll('#body tr').length > 1){
         btn.closest('tr').remove();

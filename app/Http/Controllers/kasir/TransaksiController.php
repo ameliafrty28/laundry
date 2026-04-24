@@ -35,6 +35,11 @@ class TransaksiController extends Controller
     // ======================
     public function proses(Request $request)
     {
+        $request->validate([
+            'pelanggan_id' => 'required',
+            'transaksi_tanggal' => 'required|date'
+        ]);
+
         $total = 0;
         $detail = [];
 
@@ -64,6 +69,7 @@ class TransaksiController extends Controller
 
         return view('kasir.transaksi.pembayaran', [
             'pelanggan_id' => $request->pelanggan_id,
+            'transaksi_tanggal' => $request->transaksi_tanggal, // 🔥 penting
             'detail' => $detail,
             'total' => $total
         ]);
@@ -101,10 +107,15 @@ class TransaksiController extends Controller
                 $status = 'belum_lunas';
             }
 
+            $request->validate([
+                'pelanggan_id' => 'required',
+                'transaksi_tanggal' => 'required|date'
+            ]);
+
             $transaksi = Transaksi::create([
                 'user_id' => auth()->user()->user_id ?? 1,
                 'pelanggan_id' => $request->pelanggan_id,
-                'transaksi_tanggal' => now(),
+                'transaksi_tanggal' => $request->transaksi_tanggal, // 🔥 FIX
                 'transaksi_total' => $total,
                 'transaksi_dibayar' => $dibayar,
                 'transaksi_sisa' => $sisa,

@@ -32,7 +32,7 @@ class PelangganController extends Controller
     {
         $request->validate([
             'pelanggan_nama' => 'required',
-            'pelanggan_wa' => 'required'
+            'pelanggan_wa' => 'nullable'
         ]);
 
         $pelanggan = Pelanggan::create($request->all());
@@ -68,7 +68,7 @@ class PelangganController extends Controller
     {
         $request->validate([
             'pelanggan_nama' => 'required',
-            'pelanggan_wa' => 'required'
+            'pelanggan_wa' => 'nullable'
         ]);
 
         $pelanggan->update($request->all());
