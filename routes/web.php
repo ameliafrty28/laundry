@@ -13,6 +13,7 @@ use App\Http\Controllers\admin\DashboardController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RekapController;
+use App\Http\Controllers\ModelRegresiController;
 
 
 /*
@@ -126,3 +127,4 @@ Route::prefix('admin')
 });
 
 Route::get('/generate-rekap', [RekapController::class, 'generateRekapHarian']);
+Route::get('/train-model', [ModelRegresiController::class, 'train']);
