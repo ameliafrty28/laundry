@@ -8,21 +8,34 @@ class RekapController extends Controller
 {
     public function generateRekapHarian()
 {
-    $data = DB::table('transaksi as t')
-    ->join('detail_transaksi as d', 't.transaksi_id', '=', 'd.transaksi_id')
-    ->join('layanan as l', 'd.layanan_id', '=', 'l.layanan_id')
-    ->select(
-        DB::raw('DATE(t.transaksi_tanggal) as tanggal'),
-        DB::raw('SUM(CASE WHEN l.layanan_jenis = "reguler" THEN 1 ELSE 0 END) as total_reguler'),
-        DB::raw('SUM(CASE WHEN l.layanan_jenis = "expres" THEN 1 ELSE 0 END) as total_ekspres'),
-        DB::raw('SUM(CASE WHEN l.layanan_jenis = "satuan" THEN 1 ELSE 0 END) as total_satuan'),
-        DB::raw('SUM(d.detail_berat) as total_berat'),
-        DB::raw('SUM(t.transaksi_total) as total_pendapatan')
-    )
-    ->groupBy(DB::raw('DATE(t.transaksi_tanggal)'))
-    ->get();
+    // 🔹 1. Ambil pendapatan (TANPA JOIN)
+    $pendapatan = DB::table('transaksi')
+        ->selectRaw('
+            DATE(transaksi_tanggal) as tanggal,
+            SUM(transaksi_total) as total_pendapatan
+        ')
+        ->groupBy(DB::raw('DATE(transaksi_tanggal)'))
+        ->get()
+        ->keyBy('tanggal');
 
-    foreach ($data as $row) {
+    // 🔹 2. Ambil layanan + berat
+    $detail = DB::table('detail_transaksi as d')
+        ->join('layanan as l', 'd.layanan_id', '=', 'l.layanan_id')
+        ->join('transaksi as t', 'd.transaksi_id', '=', 't.transaksi_id')
+        ->select(
+            DB::raw('DATE(t.transaksi_tanggal) as tanggal'),
+            DB::raw('SUM(CASE WHEN l.layanan_jenis = "Reguler" THEN 1 ELSE 0 END) as total_reguler'),
+            DB::raw('SUM(CASE WHEN l.layanan_jenis = "Expres" THEN 1 ELSE 0 END) as total_ekspres'),
+            DB::raw('SUM(CASE WHEN l.layanan_jenis = "Satuan" THEN 1 ELSE 0 END) as total_satuan'),
+            DB::raw('SUM(d.detail_berat) as total_berat')
+        )
+        ->groupBy(DB::raw('DATE(t.transaksi_tanggal)'))
+        ->get();
+
+    foreach ($detail as $row) {
+
+        $totalPendapatan = $pendapatan[$row->tanggal]->total_pendapatan ?? 0;
+
         DB::table('rekap_harian')->updateOrInsert(
             ['rekap_tanggal' => $row->tanggal],
             [
@@ -30,13 +43,13 @@ class RekapController extends Controller
                 'rekap_total_ekspres' => $row->total_ekspres,
                 'rekap_total_satuan' => $row->total_satuan,
                 'rekap_total_berat' => $row->total_berat,
-                'rekap_total_pendapatan' => $row->total_pendapatan,
-                'created_at' => now(),
+                'rekap_total_pendapatan' => $totalPendapatan,
                 'updated_at' => now(),
+                'created_at' => now(),
             ]
         );
     }
 
-    return "Rekap berhasil dibuat";
+    return "Rekap harian sudah diperbaiki";
 }
 }

@@ -10,67 +10,101 @@ class ModelRegresiController extends Controller
     {
         $data = DB::table('rekap_harian')->get();
 
-        $n = count($data);
-
-        if ($n == 0) {
-            return "Data kosong";
-        }
-
-        // ambil variabel
-        $X1 = $X2 = $X3 = $X4 = $Y = [];
+        $X = [];
+        $Y = [];
 
         foreach ($data as $d) {
-            $X1[] = $d->rekap_total_reguler;
-            $X2[] = $d->rekap_total_ekspres;
-            $X3[] = $d->rekap_total_satuan;
-            $X4[] = $d->rekap_total_berat;
-            $Y[]  = $d->rekap_total_pendapatan;
+            $X[] = [
+                1, // konstanta
+                $d->rekap_total_reguler,
+                $d->rekap_total_ekspres,
+                $d->rekap_total_satuan,
+                $d->rekap_total_berat
+            ];
+
+            $Y[] = [$d->rekap_total_pendapatan];
         }
 
-        // rata-rata
-        $meanY = array_sum($Y) / $n;
-        $meanX1 = array_sum($X1) / $n;
-        $meanX2 = array_sum($X2) / $n;
-        $meanX3 = array_sum($X3) / $n;
-        $meanX4 = array_sum($X4) / $n;
+        // ======================
+        // MATRIX FUNCTION
+        // ======================
 
-        // =========================
-        // KOEFISIEN (APPROX METHOD)
-        // =========================
+        function transpose($m) {
+            return array_map(null, ...$m);
+        }
 
-        $b1 = $meanY / ($meanX1 ?: 1);
-        $b2 = $meanY / ($meanX2 ?: 1);
-        $b3 = $meanY / ($meanX3 ?: 1);
-        $b4 = $meanY / ($meanX4 ?: 1);
+        function multiply($a, $b) {
+            $result = [];
+            for ($i = 0; $i < count($a); $i++) {
+                for ($j = 0; $j < count($b[0]); $j++) {
+                    $sum = 0;
+                    for ($k = 0; $k < count($b); $k++) {
+                        $sum += $a[$i][$k] * $b[$k][$j];
+                    }
+                    $result[$i][$j] = $sum;
+                }
+            }
+            return $result;
+        }
 
-        $b0 = $meanY - (
-            ($b1 * $meanX1) +
-            ($b2 * $meanX2) +
-            ($b3 * $meanX3) +
-            ($b4 * $meanX4)
-        );
+        function inverse($m) {
+            $n = count($m);
+            $identity = [];
 
-        // =========================
-        // SIMPAN KE DATABASE
-        // =========================
+            // buat identity matrix
+            for ($i = 0; $i < $n; $i++) {
+                for ($j = 0; $j < $n; $j++) {
+                    $identity[$i][$j] = ($i == $j) ? 1 : 0;
+                }
+            }
+
+            // Gauss-Jordan
+            for ($i = 0; $i < $n; $i++) {
+                $factor = $m[$i][$i];
+                for ($j = 0; $j < $n; $j++) {
+                    $m[$i][$j] /= $factor;
+                    $identity[$i][$j] /= $factor;
+                }
+
+                for ($k = 0; $k < $n; $k++) {
+                    if ($k != $i) {
+                        $factor = $m[$k][$i];
+                        for ($j = 0; $j < $n; $j++) {
+                            $m[$k][$j] -= $factor * $m[$i][$j];
+                            $identity[$k][$j] -= $factor * $identity[$i][$j];
+                        }
+                    }
+                }
+            }
+
+            return $identity;
+        }
+
+        // ======================
+        // OLS
+        // ======================
+
+        $Xt = transpose($X);
+        $XtX = multiply($Xt, $X);
+        $XtX_inv = inverse($XtX);
+        $XtY = multiply($Xt, $Y);
+        $beta = multiply($XtX_inv, $XtY);
+
+        // ======================
+        // SIMPAN
+        // ======================
 
         DB::table('model_regresi')->insert([
-            'konstanta' => $b0,
-            'b_reguler' => $b1,
-            'b_ekspres' => $b2,
-            'b_satuan'  => $b3,
-            'b_berat'   => $b4,
+            'konstanta' => $beta[0][0],
+            'b_reguler' => $beta[1][0],
+            'b_ekspres' => $beta[2][0],
+            'b_satuan'  => $beta[3][0],
+            'b_berat'   => $beta[4][0],
             'tanggal_model' => now(),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        return [
-            'konstanta' => $b0,
-            'b1' => $b1,
-            'b2' => $b2,
-            'b3' => $b3,
-            'b4' => $b4
-        ];
+        return $beta;
     }
 }
