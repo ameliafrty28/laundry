@@ -97,7 +97,14 @@
               <span class="hide-menu">Business Intelligence</span>
             </a>
           </li>
-
+          
+          <li class="sidebar-item">
+            <a class="sidebar-link {{ request()->is('admin/prediksi*') ? 'active' : '' }}"
+              href="{{ url('/admin/prediksi') }}">
+              <i class="ti ti-trending-up"></i>
+              <span class="hide-menu">Prediksi</span>
+            </a>
+          </li>
         </ul>
       </nav>
     </div>

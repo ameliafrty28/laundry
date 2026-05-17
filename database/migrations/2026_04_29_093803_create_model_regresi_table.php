@@ -6,31 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('model_regresi', function (Blueprint $table) {
             $table->id();
 
-            // 🔥 koefisien regresi
-            $table->double('konstanta');      // a / β0
-            $table->double('b_reguler');      // β1
-            $table->double('b_ekspres');      // β2
-            $table->double('b_satuan');       // β3
-            $table->double('b_berat');        // β4
+            // konstanta (β0)
+            $table->double('konstanta');
 
-            // kapan model dibuat
+            // koefisien regresi (β1 - β4)
+            $table->double('b_reguler_kiloan');
+            $table->double('b_ekspres_kiloan');
+            $table->double('b_reguler_satuan');
+            $table->double('b_ekspres_satuan');
+
+            // tanggal model dibuat
             $table->date('tanggal_model');
 
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('model_regresi');

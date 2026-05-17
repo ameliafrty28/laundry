@@ -27,18 +27,30 @@
             Reguler
             </option>
 
-            <option value="Satuan"
-            {{ $layanan->layanan_jenis == 'Satuan' ? 'selected' : '' }}>
-            Satuan
-            </option>
-
-            <option value="Ekspres"
-            {{ $layanan->layanan_jenis == 'Ekspres' ? 'selected' : '' }}>
-            Ekspres
+            <option value="Expres"
+            {{ $layanan->layanan_jenis == 'Expres' ? 'selected' : '' }}>
+            Expres
             </option>
 
         </select>
-      </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Tipe Layanan</label>
+        <select name="layanan_tipe" class="form-control" required>
+
+            <option value="Kiloan"
+            {{ $layanan->layanan_tipe == 'Kiloan' ? 'selected' : '' }}>
+            Kiloan
+            </option>
+
+            <option value="Satuan"
+            {{ $layanan->layanan_tipe == 'Satuan' ? 'selected' : '' }}>
+            Satuan
+            </option>
+
+        </select>
+    </div>
 
       <div class="mb-3">
         <label>Harga</label>

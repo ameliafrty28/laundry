@@ -16,6 +16,7 @@
           <tr>
             <th>Nama</th>
             <th>Jenis</th>
+            <th>Tipe</th>
             <th>Harga</th>
             <th>Aksi</th>
           </tr>
@@ -25,7 +26,13 @@
           @foreach($data as $d)
           <tr>
             <td>{{ $d->layanan_nama }}</td>
-            <td>{{ $d->layanan_jenis }}</td>
+            <td>
+              <span class="badge bg-info">{{ $d->layanan_jenis }}</span>
+            </td>
+
+            <td>
+              <span class="badge bg-secondary">{{ $d->layanan_tipe }}</span>
+            </td>
             <td>Rp {{ number_format($d->layanan_harga) }}</td>
             <td>
               <a href="/admin/layanan/{{ $d->layanan_id }}/edit"

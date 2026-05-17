@@ -10,11 +10,12 @@ use App\Http\Controllers\admin\LayananController as AdminLayanan;
 use App\Http\Controllers\admin\PelangganController as AdminPelanggan;
 use App\Http\Controllers\admin\TransaksiController as AdminTransaksi;
 use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\PrediksiController;
+use App\Http\Controllers\admin\LaporanController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RekapController;
 use App\Http\Controllers\ModelRegresiController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -128,3 +129,6 @@ Route::prefix('admin')
 
 Route::get('/generate-rekap', [RekapController::class, 'generateRekapHarian']);
 Route::get('/train-model', [ModelRegresiController::class, 'train']);
+
+Route::get('/admin/prediksi', [PrediksiController::class, 'index']);
+Route::get('/admin/laporan', [LaporanController::class, 'index']);

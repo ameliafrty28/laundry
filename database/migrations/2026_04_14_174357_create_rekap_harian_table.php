@@ -14,11 +14,19 @@ return new class extends Migration
         Schema::create('rekap_harian', function (Blueprint $table) {
             $table->id('rekap_id');
             $table->date('rekap_tanggal');
-            $table->integer('rekap_total_reguler')->default(0);
-            $table->integer('rekap_total_ekspres')->default(0);
-            $table->integer('rekap_total_satuan')->default(0);
-            $table->decimal('rekap_total_berat', 10, 2)->default(0);
+
+            // 🔥 4 VARIABEL UNTUK REGRESI
+            $table->integer('rekap_reguler_kiloan')->default(0);
+            $table->integer('rekap_ekspres_kiloan')->default(0);
+            $table->integer('rekap_reguler_satuan')->default(0);
+            $table->integer('rekap_ekspres_satuan')->default(0);
+
+            // total transaksi
+            $table->integer('rekap_total_transaksi')->default(0);
+
+            // pendapatan
             $table->decimal('rekap_total_pendapatan', 15, 2)->default(0);
+
             $table->timestamps();
         });
     }

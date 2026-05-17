@@ -8,169 +8,143 @@ class ModelRegresiController extends Controller
 {
     public function train()
     {
-        $data = DB::table('rekap_harian')->get();
+        $data = DB::table('rekap_harian')->limit(57)->get(); // biar cocok dengan manual
 
-        if ($data->count() < 5) {
-            return "Data belum cukup untuk training";
+        $n = count($data);
+
+        if ($n < 5) {
+            return "Data kurang";
         }
 
-        $X = [];
-        $Y = [];
+        // ======================
+        // HITUNG Σ (SESUAI LAPORAN)
+        // ======================
 
-        // ======================
-        // DETEKSI MULTIKOLINEARITAS
-        // ======================
-        $isCollinear = true;
+        $sumY = $sumX1 = $sumX2 = $sumX3 = $sumX4 = 0;
+        $sumX1Y = $sumX2Y = $sumX3Y = $sumX4Y = 0;
+        $sumX1_2 = $sumX2_2 = $sumX3_2 = $sumX4_2 = 0;
+        $sumX1X2 = $sumX1X3 = $sumX1X4 = 0;
+        $sumX2X3 = $sumX2X4 = $sumX3X4 = 0;
 
         foreach ($data as $d) {
-            if ($d->rekap_total_berat != ($d->rekap_total_reguler + $d->rekap_total_ekspres)) {
-                $isCollinear = false;
-                break;
-            }
+
+            $x1 = (float)$d->rekap_reguler_kiloan;
+            $x2 = (float)$d->rekap_ekspres_kiloan;
+            $x3 = (float)$d->rekap_reguler_satuan;
+            $x4 = (float)$d->rekap_ekspres_satuan;
+            $y  = (float)$d->rekap_total_pendapatan;
+
+            $sumY += $y;
+
+            $sumX1 += $x1;
+            $sumX2 += $x2;
+            $sumX3 += $x3;
+            $sumX4 += $x4;
+
+            $sumX1Y += $x1 * $y;
+            $sumX2Y += $x2 * $y;
+            $sumX3Y += $x3 * $y;
+            $sumX4Y += $x4 * $y;
+
+            $sumX1_2 += $x1 * $x1;
+            $sumX2_2 += $x2 * $x2;
+            $sumX3_2 += $x3 * $x3;
+            $sumX4_2 += $x4 * $x4;
+
+            $sumX1X2 += $x1 * $x2;
+            $sumX1X3 += $x1 * $x3;
+            $sumX1X4 += $x1 * $x4;
+
+            $sumX2X3 += $x2 * $x3;
+            $sumX2X4 += $x2 * $x4;
+            $sumX3X4 += $x3 * $x4;
         }
 
         // ======================
-        // BUILD MATRIX
-        // ======================
-        foreach ($data as $d) {
-
-            if ($isCollinear) {
-                // 🔥 kondisi sekarang (hindari berat)
-                $X[] = [
-                    1,
-                    $d->rekap_total_reguler,
-                    $d->rekap_total_ekspres,
-                    $d->rekap_total_satuan
-                ];
-            } else {
-                // ✔ kondisi normal (pakai semua variabel)
-                $X[] = [
-                    1,
-                    $d->rekap_total_reguler,
-                    $d->rekap_total_ekspres,
-                    $d->rekap_total_satuan,
-                    $d->rekap_total_berat
-                ];
-            }
-
-            $Y[] = [$d->rekap_total_pendapatan];
-        }
-
-        // ======================
-        // MATRIX FUNCTION
+        // BENTUK PERSAMAAN NORMAL
         // ======================
 
-        function transpose($m) {
-            return array_map(null, ...$m);
-        }
+        $A = [
+            [$n, $sumX1, $sumX2, $sumX3, $sumX4],
+            [$sumX1, $sumX1_2, $sumX1X2, $sumX1X3, $sumX1X4],
+            [$sumX2, $sumX1X2, $sumX2_2, $sumX2X3, $sumX2X4],
+            [$sumX3, $sumX1X3, $sumX2X3, $sumX3_2, $sumX3X4],
+            [$sumX4, $sumX1X4, $sumX2X4, $sumX3X4, $sumX4_2],
+        ];
 
-        function multiply($a, $b) {
-            $result = [];
-            for ($i = 0; $i < count($a); $i++) {
-                for ($j = 0; $j < count($b[0]); $j++) {
-                    $sum = 0;
-                    for ($k = 0; $k < count($b); $k++) {
-                        $sum += $a[$i][$k] * $b[$k][$j];
-                    }
-                    $result[$i][$j] = $sum;
-                }
-            }
-            return $result;
-        }
+        $B = [
+            [$sumY],
+            [$sumX1Y],
+            [$sumX2Y],
+            [$sumX3Y],
+            [$sumX4Y],
+        ];
 
-        function inverse($m) {
-            $n = count($m);
-            $identity = [];
+        // ======================
+        // ELIMINASI GAUSS
+        // ======================
+
+        function solve($A, $B)
+        {
+            $n = count($A);
 
             for ($i = 0; $i < $n; $i++) {
-                for ($j = 0; $j < $n; $j++) {
-                    $identity[$i][$j] = ($i == $j) ? 1 : 0;
-                }
+                $A[$i][] = $B[$i][0];
             }
 
             for ($i = 0; $i < $n; $i++) {
 
-                // 🔥 pivoting
-                if ($m[$i][$i] == 0) {
-                    for ($k = $i + 1; $k < $n; $k++) {
-                        if ($m[$k][$i] != 0) {
+                for ($k = $i + 1; $k < $n; $k++) {
+                    $factor = $A[$k][$i] / $A[$i][$i];
 
-                            $temp = $m[$i];
-                            $m[$i] = $m[$k];
-                            $m[$k] = $temp;
-
-                            $temp = $identity[$i];
-                            $identity[$i] = $identity[$k];
-                            $identity[$k] = $temp;
-
-                            break;
-                        }
-                    }
-                }
-
-                $factor = $m[$i][$i];
-
-                if ($factor == 0) {
-                    throw new \Exception("Matrix tidak bisa diinvers (multikolinearitas)");
-                }
-
-                for ($j = 0; $j < $n; $j++) {
-                    $m[$i][$j] /= $factor;
-                    $identity[$i][$j] /= $factor;
-                }
-
-                for ($k = 0; $k < $n; $k++) {
-                    if ($k != $i) {
-                        $factor = $m[$k][$i];
-                        for ($j = 0; $j < $n; $j++) {
-                            $m[$k][$j] -= $factor * $m[$i][$j];
-                            $identity[$k][$j] -= $factor * $identity[$i][$j];
-                        }
+                    for ($j = $i; $j <= $n; $j++) {
+                        $A[$k][$j] -= $factor * $A[$i][$j];
                     }
                 }
             }
 
-            return $identity;
+            $x = array_fill(0, $n, 0);
+
+            for ($i = $n - 1; $i >= 0; $i--) {
+                $x[$i] = $A[$i][$n];
+
+                for ($j = $i + 1; $j < $n; $j++) {
+                    $x[$i] -= $A[$i][$j] * $x[$j];
+                }
+
+                $x[$i] /= $A[$i][$i];
+            }
+
+            return $x;
         }
 
-        // ======================
-        // OLS
-        // ======================
-
-        $Xt = transpose($X);
-        $XtX = multiply($Xt, $X);
-
-        try {
-            $XtX_inv = inverse($XtX);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => $e->getMessage(),
-                'message' => 'Model gagal dihitung. Periksa struktur data'
-            ]);
-        }
-
-        $XtY = multiply($Xt, $Y);
-        $beta = multiply($XtX_inv, $XtY);
+        $beta = solve($A, $B);
 
         // ======================
-        // SIMPAN
+        // SIMPAN KE DATABASE
         // ======================
 
         DB::table('model_regresi')->insert([
-            'konstanta' => $beta[0][0],
-            'b_reguler' => $beta[1][0],
-            'b_ekspres' => $beta[2][0],
-            'b_satuan'  => $beta[3][0],
-            'b_berat'   => $isCollinear ? 0 : ($beta[4][0] ?? 0),
+            'konstanta' => round($beta[0], 2),
+            'b_reguler_kiloan' => round($beta[1], 2),
+            'b_ekspres_kiloan' => round($beta[2], 2),
+            'b_reguler_satuan' => round($beta[3], 2),
+            'b_ekspres_satuan' => round($beta[4], 2),
             'tanggal_model' => now(),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
+        // ======================
+        // OUTPUT
+        // ======================
+
         return [
-            'status' => 'Model berhasil dibuat',
-            'collinear' => $isCollinear,
-            'beta' => $beta
+            'a' => round($beta[0], 2),
+            'b1' => round($beta[1], 2),
+            'b2' => round($beta[2], 2),
+            'b3' => round($beta[3], 2),
+            'b4' => round($beta[4], 2),
         ];
     }
 }

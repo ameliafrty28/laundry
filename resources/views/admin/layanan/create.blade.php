@@ -16,13 +16,22 @@
       </div>
 
       <div class="mb-3">
-        <label>Jenis Layanan</label>
-        <select name="layanan_jenis" class="form-control" required>
-            <option value="">-- Pilih Jenis --</option>
-            <option value="Reguler">Reguler</option>
-            <option value="Satuan">Satuan</option>
-            <option value="Ekspres">Ekspres</option>
-        </select>
+        <div class="mb-3">
+            <label>Jenis Layanan</label>
+            <select name="layanan_jenis" class="form-control" required>
+                <option value="">-- Pilih Jenis --</option>
+                <option value="Reguler">Reguler</option>
+                <option value="Expres">Expres</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Tipe Layanan</label>
+            <select name="layanan_tipe" class="form-control" required>
+                <option value="">-- Pilih Tipe --</option>
+                <option value="Kiloan">Kiloan</option>
+                <option value="Satuan">Satuan</option>
+            </select>
         </div>
       <div class="mb-3">
         <label>Harga</label>

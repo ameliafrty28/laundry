@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('layanan', function (Blueprint $table) {
             $table->id('layanan_id');
             $table->string('layanan_nama');
-            $table->enum('layanan_jenis', ['Reguler', 'Expres', 'Satuan']);
+            $table->enum('layanan_jenis', ['Reguler', 'Expres']);
+            $table->enum('layanan_tipe', ['Satuan', 'Kiloan']);
             $table->decimal('layanan_harga', 10, 2);
             $table->timestamps();
         });

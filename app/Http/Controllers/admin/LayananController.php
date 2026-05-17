@@ -32,7 +32,8 @@ class LayananController extends Controller
     {
         $request->validate([
             'layanan_nama' => 'required',
-            'layanan_jenis' => 'required|in:Reguler,Satuan,Ekspres',
+            'layanan_jenis' => 'required|in:Reguler,Expres',
+            'layanan_tipe' => 'required|in:Satuan,Kiloan',
             'layanan_harga' => 'required|numeric'
         ]);
 
@@ -64,7 +65,8 @@ class LayananController extends Controller
     {
         $request->validate([
             'layanan_nama' => 'required',
-            'layanan_jenis' => 'required|in:Reguler,Satuan,Ekspres',
+            'layanan_jenis' => 'required|in:Reguler,Expres',
+            'layanan_tipe' => 'required|in:Satuan,Kiloan',
             'layanan_harga' => 'required|numeric'
         ]);
 
