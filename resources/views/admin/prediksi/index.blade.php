@@ -12,16 +12,24 @@
 
         <div>
 
-            <h2 class="fw-bold mb-1">
+           <h2 class="fw-bold mb-1 text-white">
+                <i class="bi bi-graph-up-arrow me-2"></i>
                 Prediksi Pendapatan Laundry
             </h2>
 
-            <p class="mb-0 opacity-75">
-                Forecasting menggunakan Regresi Linear Berganda
+            <p class="mb-0 text-white opacity-75">
+                Menggunakan regresi Linear Berganda
             </p>
 
         </div>
+        <div class="text-end">
 
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">
+                <i class="bi bi-cpu me-1"></i>
+                Auto Retraining Model
+            </span>
+
+        </div>
     </div>
 
 
@@ -30,34 +38,41 @@
     {{-- INFO MODEL --}}
     {{-- ===================================== --}}
 
-    <div class="card dashboard-card mb-4">
+    <div class="card dashboard-card border-0 shadow-sm mb-4">
 
-        <div class="card-body">
+        <div class="card-body p-4">
 
             <div class="row align-items-center">
 
-                <div class="col-md-8">
+                <div class="col-lg-8">
 
                     <h5 class="fw-bold mb-2">
-                        Informasi Model
+                        Informasi Model Prediksi
                     </h5>
 
                     <p class="text-muted mb-0">
-
-                        Model menggunakan
-                        <b>180 data historis harian terbaru</b>
-                        sebagai data training dengan metode
-                        <b>Regresi Linear Berganda</b>.
-
+                        Sistem menggunakan metode
+                        <b>Regresi Linear Berganda</b>
+                        dengan proses training otomatis menggunakan
+                        <b>seluruh data historis transaksi</b>
+                        yang tersimpan pada sistem.
                     </p>
 
                 </div>
 
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
 
-                    <span class="badge bg-success px-3 py-2">
-                        Auto Training
-                    </span>
+                    <div class="d-flex justify-content-lg-end gap-2 flex-wrap">
+
+                        <span class="badge bg-success px-3 py-2 rounded-pill">
+                            Auto ETL
+                        </span>
+
+                        <span class="badge bg-primary px-3 py-2 rounded-pill">
+                            Dynamic Model
+                        </span>
+
+                    </div>
 
                 </div>
 
@@ -68,39 +83,54 @@
     </div>
 
 
-
     {{-- ===================================== --}}
     {{-- INPUT PREDIKSI --}}
     {{-- ===================================== --}}
 
-    <div class="card dashboard-card mb-4">
+    <div class="card dashboard-card border-0 shadow-sm mb-4">
 
-        <div class="card-body">
+        <div class="card-body p-4">
 
-            <form method="GET"
-                  action="/admin/prediksi">
+            <div class="d-flex justify-content-between align-items-center mb-4">
 
-                <div class="row align-items-end g-3">
+                <div>
 
-                    <div class="col-md-8">
+                    <h5 class="fw-bold mb-1">
+                        Forecasting Pendapatan
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Prediksi pendapatan berdasarkan pola historis transaksi laundry
+                    </p>
+
+                </div>
+
+            </div>
+
+            <form method="GET" action="/admin/prediksi">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-lg-9">
 
                         <label class="form-label fw-semibold">
-                            Prediksi Berapa Hari Ke Depan?
+                            Jumlah Hari Prediksi
                         </label>
 
                         <input type="number"
-                               name="hari"
-                               value="{{ $hari }}"
-                               class="form-control custom-input"
-                               min="1">
+                            name="hari"
+                            value="{{ $hari }}"
+                            min="1"
+                            class="form-control custom-input">
 
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-lg-3">
 
-                        <button class="btn btn-dashboard w-100">
+                        <button class="btn btn-dashboard w-100 py-3">
 
-                            Hitung Prediksi
+                            <i class="bi bi-bar-chart-line-fill me-2"></i>
+                            Generate Forecast
 
                         </button>
 
@@ -113,7 +143,6 @@
         </div>
 
     </div>
-
 
 
     {{-- ===================================== --}}
@@ -149,7 +178,7 @@
                         <h6>Reguler Kiloan</h6>
 
                         <h4>
-                            {{ round($x1,2) }}
+                            {{ $hasilPrediksi[0]['x1'] }}
                         </h4>
 
                     </div>
@@ -163,7 +192,7 @@
                         <h6>Ekspres Kiloan</h6>
 
                         <h4>
-                            {{ round($x2,2) }}
+                            {{ $hasilPrediksi[0]['x2'] }}
                         </h4>
 
                     </div>
@@ -177,7 +206,7 @@
                         <h6>Reguler Satuan</h6>
 
                         <h4>
-                            {{ round($x3,2) }}
+                            {{ $hasilPrediksi[0]['x3'] }}
                         </h4>
 
                     </div>
@@ -191,7 +220,7 @@
                         <h6>Ekspres Satuan</h6>
 
                         <h4>
-                            {{ round($x4,2) }}
+                            {{ $hasilPrediksi[0]['x4'] }}
                         </h4>
 
                     </div>

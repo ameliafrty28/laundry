@@ -12,33 +12,30 @@ class PrediksiController extends Controller
     public function index(Request $request)
     {
         // =====================================
-        // INPUT JUMLAH HARI
+        // INPUT JUMLAH HARI PREDIKSI
         // =====================================
 
         $hari = $request->input('hari', 7);
 
         // =====================================
         // AMBIL DATA HISTORIS
-        // 30 HARI TERAKHIR
+        // SEMUA DATA
         // =====================================
 
         $historis = DB::table('rekap_harian')
-            ->orderByDesc('rekap_tanggal')
-            ->limit(30)
-            ->get()
-            ->reverse()
-            ->values();
+            ->orderBy('rekap_tanggal')
+            ->get();
 
         if ($historis->count() == 0) {
 
             return back()->with(
                 'error',
-                'Data rekap harian belum tersedia'
+                'Data historis belum tersedia'
             );
         }
 
         // =====================================
-        // AMBIL MODEL REGRESI
+        // AMBIL MODEL REGRESI TERBARU
         // =====================================
 
         $model = DB::table('model_regresi')
@@ -54,34 +51,39 @@ class PrediksiController extends Controller
         }
 
         // =====================================
-        // SIMPAN DATA HISTORIS
-        // UNTUK ROLLING FORECAST
+        // AMBIL 7 DATA TERAKHIR
+        // UNTUK MOVING AVERAGE
         // =====================================
 
-        $rollingData = $historis->map(function ($item) {
+        $rollingData = $historis
+            ->take(-7)
+            ->map(function ($item) {
 
-            return [
+                return [
 
-                'reguler_kiloan' =>
-                    $item->rekap_reguler_kiloan,
+                    'reguler_kiloan' =>
+                        (float)$item->rekap_reguler_kiloan,
 
-                'ekspres_kiloan' =>
-                    $item->rekap_ekspres_kiloan,
+                    'ekspres_kiloan' =>
+                        (float)$item->rekap_ekspres_kiloan,
 
-                'reguler_satuan' =>
-                    $item->rekap_reguler_satuan,
+                    'reguler_satuan' =>
+                        (float)$item->rekap_reguler_satuan,
 
-                'ekspres_satuan' =>
-                    $item->rekap_ekspres_satuan,
+                    'ekspres_satuan' =>
+                        (float)$item->rekap_ekspres_satuan,
 
-                'pendapatan' =>
-                    $item->rekap_total_pendapatan
-            ];
-        })->toArray();
+                    'pendapatan' =>
+                        (float)$item->rekap_total_pendapatan
+                ];
+
+            })
+            ->values()
+            ->toArray();
 
         // =====================================
         // FORECAST MULTI HARI
-        // RECURSIVE FORECASTING
+        // ITERATIVE FORECASTING
         // =====================================
 
         $hasilPrediksi = [];
@@ -95,8 +97,7 @@ class PrediksiController extends Controller
         for ($i = 1; $i <= $hari; $i++) {
 
             // =================================
-            // HITUNG RATA-RATA
-            // DARI DATA ROLLING TERBARU
+            // MOVING AVERAGE 7 HARI
             // =================================
 
             $x1 =
@@ -116,7 +117,7 @@ class PrediksiController extends Controller
                 ->avg('ekspres_satuan');
 
             // =================================
-            // HITUNG REGRESI
+            // HITUNG PREDIKSI REGRESI
             // =================================
 
             $forecast =
@@ -126,11 +127,14 @@ class PrediksiController extends Controller
                 ($model->b_reguler_satuan * $x3) +
                 ($model->b_ekspres_satuan * $x4);
 
-            $forecast =
-                max(0, $forecast);
+            // =================================
+            // VALIDASI NILAI NEGATIF
+            // =================================
+
+            $forecast = max(0, $forecast);
 
             // =================================
-            // SIMPAN HASIL FORECAST
+            // SIMPAN HASIL PREDIKSI
             // =================================
 
             $hasilPrediksi[] = [
@@ -141,7 +145,19 @@ class PrediksiController extends Controller
                     ->format('d M Y'),
 
                 'prediksi' =>
-                    round($forecast, 2)
+                    round($forecast, 2),
+
+                'x1' =>
+                    round($x1, 2),
+
+                'x2' =>
+                    round($x2, 2),
+
+                'x3' =>
+                    round($x3, 2),
+
+                'x4' =>
+                    round($x4, 2)
             ];
 
             // =================================
@@ -151,26 +167,44 @@ class PrediksiController extends Controller
             $totalPrediksi += $forecast;
 
             // =================================
-            // UPDATE DATA ROLLING
-            // UNTUK HARI BERIKUTNYA
+            // UPDATE ROLLING DATA
             // =================================
 
             array_shift($rollingData);
 
+            // =================================
+            // SIMULASI DATA BARU
+            // AGAR LEBIH DINAMIS
+            // =================================
+
             $rollingData[] = [
 
-                // asumsi pola layanan
-                // mengikuti rata-rata terbaru
+                'reguler_kiloan' =>
+                    round(
+                        $x1 * rand(95, 105) / 100,
+                        2
+                    ),
 
-                'reguler_kiloan' => $x1,
+                'ekspres_kiloan' =>
+                    round(
+                        $x2 * rand(95, 105) / 100,
+                        2
+                    ),
 
-                'ekspres_kiloan' => $x2,
+                'reguler_satuan' =>
+                    round(
+                        $x3 * rand(95, 105) / 100,
+                        2
+                    ),
 
-                'reguler_satuan' => $x3,
+                'ekspres_satuan' =>
+                    round(
+                        $x4 * rand(95, 105) / 100,
+                        2
+                    ),
 
-                'ekspres_satuan' => $x4,
-
-                'pendapatan' => $forecast
+                'pendapatan' =>
+                    $forecast
             ];
         }
 
@@ -183,11 +217,11 @@ class PrediksiController extends Controller
 
         // =====================================
         // EVALUASI MODEL
+        // MENGGUNAKAN SEMUA DATA
         // =====================================
 
         $allData = DB::table('rekap_harian')
-            ->orderByDesc('rekap_tanggal')
-            ->limit(180)
+            ->orderBy('rekap_tanggal')
             ->get();
 
         $totalErrorKuadrat = 0;
@@ -232,8 +266,7 @@ class PrediksiController extends Controller
         // HITUNG RMSE
         // =====================================
 
-        $rmse =
-            sqrt($mse);
+        $rmse = sqrt($mse);
 
         // =====================================
         // HITUNG MAPE
@@ -257,23 +290,19 @@ class PrediksiController extends Controller
 
         if ($akurasi >= 90) {
 
-            $statusModel =
-                'Sangat Baik';
+            $statusModel = 'Sangat Baik';
 
         } elseif ($akurasi >= 80) {
 
-            $statusModel =
-                'Baik';
+            $statusModel = 'Baik';
 
         } elseif ($akurasi >= 70) {
 
-            $statusModel =
-                'Cukup';
+            $statusModel = 'Cukup';
 
         } else {
 
-            $statusModel =
-                'Kurang Baik';
+            $statusModel = 'Kurang Baik';
         }
 
         // =====================================
@@ -323,11 +352,6 @@ class PrediksiController extends Controller
             [
 
                 'hari' => $hari,
-
-                'x1' => $x1,
-                'x2' => $x2,
-                'x3' => $x3,
-                'x4' => $x4,
 
                 'hasilPrediksi' =>
                     $hasilPrediksi,
