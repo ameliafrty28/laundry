@@ -8,168 +8,655 @@
   <link rel="shortcut icon" href="{{ asset('assets/admin/imgages/logos/favicon.png') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/styles.min.css') }}">
 </head>
+<style>
+/* =========================================================
+   HEADER
+========================================================= */
+
+.app-header {
+
+    background: white;
+
+    height: 80px;
+
+    border-bottom: 1px solid #eef2f7;
+
+    box-shadow:
+        0 2px 12px rgba(0,0,0,.03);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 99;
+}
+
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+
+    height: 100%;
+
+    padding: 0 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+
+/* =========================================================
+   LEFT
+========================================================= */
+.left-sidebar {
+
+    background:
+        linear-gradient(
+            180deg,
+            #1e3c72,
+            #2a5298
+        );
+
+    box-shadow:
+        4px 0 20px rgba(0,0,0,.06);
+
+    top: 0 !important;
+
+    height: 100vh !important;
+
+    z-index: 1000;
+}
+.header-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.mobile-toggle {
+
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #f3f4f6;
+
+    color: #111827;
+
+    font-size: 22px;
+
+    text-decoration: none;
+}
+
+
+
+/* =========================================================
+   PAGE TITLE
+========================================================= */
+
+.page-title {
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    margin-bottom: 2px;
+
+    color: #111827;
+}
+
+.page-subtitle {
+
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+
+/* =========================================================
+   RIGHT
+========================================================= */
+
+.header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.header-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    border-radius: 14px;
+
+    background: #f3f4f6;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 22px;
+
+    color: #111827;
+
+    cursor: pointer;
+
+    transition: .3s;
+}
+
+.header-icon:hover {
+
+    background: #e5e7eb;
+}
+
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-box {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: #f9fafb;
+
+    padding: 8px 14px;
+
+    border-radius: 16px;
+}
+
+.profile-box img {
+
+    width: 46px;
+
+    height: 46px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+.profile-box h6 {
+
+    margin: 0;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.profile-box small {
+
+    color: #6b7280;
+
+    font-size: 12px;
+}
+
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.left-sidebar {
+
+    background:
+        linear-gradient(
+            180deg,
+            #1e3c72,
+            #2a5298
+        );
+
+    border-right: none;
+}
+
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+.sidebar-link {
+
+    height: 52px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 0 18px;
+
+    color: rgba(255,255,255,.82) !important;
+
+    font-weight: 500;
+
+    transition: .3s;
+}
+
+.sidebar-link:hover {
+
+    background: rgba(255,255,255,.10);
+
+    color: white !important;
+
+    transform: translateX(4px);
+}
+
+.sidebar-item.selected .sidebar-link {
+
+    background: white;
+
+    color: #1e3c72 !important;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.08);
+}
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:768px){
+
+    .navbar {
+
+        padding: 0 18px;
+    }
+
+    .page-title {
+
+        font-size: 18px;
+    }
+
+    .profile-box div {
+
+        display: none;
+    }
+}
+</style>
 
 <body>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
 
-    <!--  App Topstrip -->
-    <div class="app-topstrip bg-dark py-6 px-3 w-100 d-lg-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center justify-content-center gap-5 mb-2 mb-lg-0">
-        <a class="d-flex justify-content-center" href="#">
-          <img src="assets/admin/images/logos/logo-wrappixel.svg" alt="" width="150">
+<div
+    class="page-wrapper"
+    id="main-wrapper"
+    data-layout="vertical"
+    data-navbarbg="skin6"
+    data-sidebartype="full"
+    data-sidebar-position="fixed"
+    data-header-position="fixed">
+
+
+
+
+    {{-- ========================================= --}}
+    {{-- SIDEBAR --}}
+    {{-- ========================================= --}}
+
+    <aside class="left-sidebar">
+
+        <div>
+
+            {{-- LOGO --}}
+            <div class="brand-logo p-4">
+
+                <h4 class="text-white fw-bold mb-0">
+
+                    Laundry BI
+
+                </h4>
+
+            </div>
+
+
+
+           <ul id="sidebarnav">
+
+    {{-- MENU TITLE --}}
+    <li class="nav-small-cap">
+
+        MENU UTAMA
+
+    </li>
+
+
+
+    {{-- DASHBOARD --}}
+    <li class="sidebar-item active">
+
+        <a
+            class="sidebar-link"
+            href="/admin/dashboard">
+
+            <i class="ti ti-layout-dashboard"></i>
+
+            <span>
+
+                Dashboard
+
+            </span>
+
         </a>
 
-        
-      </div>
+    </li>
 
-      <div class="d-lg-flex align-items-center gap-2">
-        <h3 class="text-white mb-2 mb-lg-0 fs-5 text-center">Check Flexy Premium Version</h3>
-        <div class="d-flex align-items-center justify-content-center gap-2">
-          
-          <div class="dropdown d-flex">
-            <a class="btn btn-primary d-flex align-items-center gap-1 " href="javascript:void(0)" id="drop4"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="ti ti-shopping-cart fs-5"></i>
-              Buy Now
-              <i class="ti ti-chevron-down fs-5"></i>
-            </a>
-          </div>
-        </div>
-      </div>
 
-    </div>
-<div class="page-wrapper" id="main-wrapper"
-     data-layout="vertical"
-     data-navbarbg="skin6"
-     data-sidebartype="full"
-     data-sidebar-position="fixed"
-     data-header-position="fixed">
 
-  <!-- SIDEBAR -->
-  <aside class="left-sidebar">
-    <div>
-      <div class="brand-logo d-flex align-items-center justify-content-between">
-        <a href="/dashboard" class="text-nowrap logo-img">
-          <img src="{{ asset('assets/admin/images/logos/logo.svg') }}" alt="">
+    {{-- PELANGGAN --}}
+    <li class="sidebar-item">
+
+        <a
+            class="sidebar-link"
+            href="/admin/pelanggan">
+
+            <i class="ti ti-users"></i>
+
+            <span>
+
+                Pelanggan
+
+            </span>
+
         </a>
-      </div>
 
-      <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-        <ul id="sidebarnav">
+    </li>
 
-          <li class="nav-small-cap">
-            <span class="hide-menu">Menu Utama</span>
-          </li>
 
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/admin/dashboard">
-              <i class="ti ti-home"></i>
-              <span class="hide-menu">Dashboard</span>
-            </a>
-          </li>
 
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/admin/pelanggan">
-              <i class="ti ti-users"></i>
-              <span class="hide-menu">Pelanggan</span>
-            </a>
-          </li>
+    {{-- LAYANAN --}}
+    <li class="sidebar-item">
 
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/admin/layanan">
-              <i class="ti ti-list"></i>
-              <span class="hide-menu">Layanan</span>
-            </a>
-          </li>
+        <a
+            class="sidebar-link"
+            href="/admin/layanan">
 
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/admin/transaksi">
-              <i class="ti ti-shopping-cart"></i>
-              <span class="hide-menu">Transaksi</span>
-            </a>
-          </li>
+            <i class="ti ti-wash"></i>
 
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="/admin/laporan">
-              <i class="ti ti-chart-bar"></i>
-              <span class="hide-menu">Business Intelligence</span>
-            </a>
-          </li>
-          
-          <li class="sidebar-item">
-            <a class="sidebar-link {{ request()->is('admin/prediksi*') ? 'active' : '' }}"
-              href="{{ url('/admin/prediksi') }}">
-              <i class="ti ti-trending-up"></i>
-              <span class="hide-menu">Prediksi</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </aside>
+            <span>
 
-  <!-- MAIN -->
-  <div class="body-wrapper">
+                Layanan
 
-    <!-- HEADER -->
-    <header class="app-header">
-      <nav class="navbar navbar-expand-lg navbar-light">
+            </span>
 
-        <ul class="navbar-nav">
-          <li class="nav-item d-block d-xl-none">
-            <a class="nav-link sidebartoggler" href="javascript:void(0)">
-              <i class="ti ti-menu-2"></i>
-            </a>
-          </li>
-        </ul>
+        </a>
 
-        <div class="navbar-collapse justify-content-end px-0">
-          <ul class="navbar-nav flex-row ms-auto align-items-center">
+    </li>
 
-            <!-- USER -->
-            <li class="nav-item dropdown">
-              <a class="nav-link" href="#" data-bs-toggle="dropdown">
-                <img src="{{ asset('assets/admin/images/profile/user-1.jpg') }}" width="35" class="rounded-circle">
-              </a>
 
-              <div class="dropdown-menu dropdown-menu-end">
-                <div class="p-3">
-                  <p class="mb-1">
-                    {{ auth()->user()->user_nama ?? 'User' }}
-                  </p>
+
+    {{-- TRANSAKSI --}}
+    <li class="sidebar-item">
+
+        <a
+            class="sidebar-link"
+            href="/admin/transaksi">
+
+            <i class="ti ti-shopping-cart"></i>
+
+            <span>
+
+                Transaksi
+
+            </span>
+
+        </a>
+
+    </li>
+
+
+
+    {{-- BUSINESS INTELLIGENCE --}}
+    <li class="sidebar-item">
+
+        <a
+            class="sidebar-link"
+            href="/admin/laporan">
+
+            <i class="ti ti-chart-bar"></i>
+
+            <span>
+
+                Business Intelligence
+
+            </span>
+
+        </a>
+
+    </li>
+
+
+
+    {{-- PREDIKSI --}}
+    <li class="sidebar-item">
+
+        <a
+            class="sidebar-link"
+            href="/admin/prediksi">
+
+            <i class="ti ti-brain"></i>
+
+            <span>
+
+                Prediksi
+
+            </span>
+
+        </a>
+
+    </li>
+
+
+
+    {{-- REKAP --}}
+    <li class="sidebar-item">
+
+        <a
+            class="sidebar-link"
+            href="/admin/rekap">
+
+            <i class="ti ti-file-analytics"></i>
+
+            <span>
+
+                Rekap Harian
+
+            </span>
+
+        </a>
+
+    </li>
+
+
+
+    {{-- USER --}}
+    <li class="sidebar-item">
+
+        <a
+            class="sidebar-link"
+            href="/admin/user">
+
+            <i class="ti ti-user-circle"></i>
+
+            <span>
+
+                User
+
+            </span>
+
+        </a>
+
+    </li>
+
+
+
+    {{-- LOGOUT --}}
+    <li class="sidebar-item mt-4">
+
+        <a
+            class="sidebar-link"
+            href="/logout">
+
+            <i class="ti ti-logout"></i>
+
+            <span>
+
+                Logout
+
+            </span>
+
+        </a>
+
+    </li>
+
+</ul>
+
+    </aside>
+
+
+
+
+
+    {{-- ========================================= --}}
+    {{-- BODY WRAPPER --}}
+    {{-- ========================================= --}}
+
+    <div class="body-wrapper">
+
+
+
+        {{-- ========================================= --}}
+        {{-- HEADER --}}
+        {{-- ========================================= --}}
+
+        <header class="app-header">
+
+            <nav class="navbar navbar-expand-lg">
+
+                {{-- LEFT --}}
+                <div class="header-left">
+
+                    <a
+                        class="mobile-toggle d-xl-none"
+                        href="javascript:void(0)">
+
+                        <i class="ti ti-menu-2"></i>
+
+                    </a>
+
+                    <div>
+
+                        <h4 class="page-title">
+
+                            Dashboard Business Intelligence
+
+                        </h4>
+
+                        <p class="page-subtitle">
+
+                            Monitoring dan analytics laundry system
+
+                        </p>
+
+                    </div>
+
                 </div>
 
-                <a href="/logout" class="btn btn-outline-primary mx-3 mb-2 d-block">
-                  Logout
-                </a>
-              </div>
-            </li>
 
-          </ul>
+
+                {{-- RIGHT --}}
+                <div class="header-right">
+                    <div class="profile-box">
+
+                        <img
+                            src="{{ asset('assets/admin/images/profile/user-1.jpg') }}"
+                            alt="profile">
+
+                        <div>
+
+                            <h6>
+
+                                Administrator
+
+                            </h6>
+
+                            <small>
+
+                                Business Intelligence
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </nav>
+
+        </header>
+
+
+
+
+
+        {{-- ========================================= --}}
+        {{-- CONTENT --}}
+        {{-- ========================================= --}}
+
+        <div class="container-fluid">
+
+            @yield('content')
+
         </div>
 
-      </nav>
-    </header>
-
-    <!-- CONTENT -->
-    <div class="body-wrapper-inner">
-      <div class="container-fluid">
-
-        @if(session('success'))
-          <div class="alert alert-success">
-            {{ session('success') }}
-          </div>
-        @endif
-
-        {{-- INI YANG AKAN DIISI HALAMAN LAIN --}}
-        @yield('content')
-
-      </div>
     </div>
 
-  </div>
 </div>
 
 <!-- JS -->

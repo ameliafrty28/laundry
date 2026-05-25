@@ -19,7 +19,7 @@ class AuthController extends Controller
             $role = strtolower(auth()->user()->user_role);
 
             if ($role == 'admin') {
-                return redirect('/admin/pelanggan');
+                return redirect('/admin/dashboard');
             }
 
             if ($role == 'kasir') {
@@ -59,7 +59,7 @@ class AuthController extends Controller
         $role = strtolower(trim($user->user_role));
 
         if ($role == 'admin') {
-             return redirect('/admin/pelanggan')->with('success','Login sebagai Admin');
+             return redirect('/admin/dashboard')->with('success','Login sebagai Admin');
         }
 
         if ($role == 'kasir') {

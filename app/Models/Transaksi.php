@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\DetailTransaksi;
 use App\Models\Pelanggan;
+use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaksi extends Model
@@ -55,5 +56,18 @@ protected static function boot()
     public function pelanggan()
     {
         return $this->belongsTo(Pelanggan::class, 'pelanggan_id', 'pelanggan_id');
+    }
+
+    public function user()
+    {
+
+        return $this->belongsTo(
+
+            User::class,
+
+            'user_id',
+
+            'user_id'
+        );
     }
 }

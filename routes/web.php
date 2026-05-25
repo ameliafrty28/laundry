@@ -12,6 +12,8 @@ use App\Http\Controllers\admin\TransaksiController as AdminTransaksi;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\PrediksiController;
 use App\Http\Controllers\admin\LaporanController;
+use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\admin\RekapAdminController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RekapController;
@@ -98,7 +100,7 @@ Route::prefix('admin')
         Route::resource('pelanggan', AdminPelanggan::class);
 
         // 🔥 TRANSAKSI ADMIN (FULL RESOURCE)
-// transaksi utama
+        // transaksi utama
         Route::controller(AdminTransaksi::class)->group(function () {
 
             Route::get('/transaksi', 'index')->name('transaksi.index');
@@ -125,6 +127,60 @@ Route::prefix('admin')
         });
 
         Route::view('/rekap', 'admin.rekap.index')->name('rekap');
+
+        Route::controller(UserController::class)->group(function () {
+
+        Route::get(
+
+            '/user',
+
+            'index'
+
+        )->name('user.index');
+
+
+
+        Route::post(
+
+            '/user/store',
+
+            'store'
+
+        )->name('user.store');
+
+
+
+        Route::put(
+
+            '/user/update/{id}',
+
+            'update'
+
+        )->name('user.update');
+
+
+
+        Route::delete(
+
+            '/user/delete/{id}',
+
+            'destroy'
+
+        )->name('user.destroy');
+
+    });
+
+    Route::controller(RekapAdminController::class)->group(function () {
+
+    Route::get(
+
+        '/rekap',
+
+        'index'
+
+    )->name('rekap.index');
+
+});
 });
 
 Route::get('/generate-rekap', [RekapController::class, 'generateRekapHarian']);

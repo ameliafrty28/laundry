@@ -162,7 +162,7 @@
                     </h5>
 
                     <p class="text-muted mb-0">
-                        Berdasarkan 30 hari terakhir
+                        Berdasarkan 7 hari terakhir
                     </p>
 
                 </div>

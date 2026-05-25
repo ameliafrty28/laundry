@@ -2,57 +2,136 @@
 
 @section('content')
 
-<div class="container-fluid">
 
+
+    {{-- ===================================================== --}}
     {{-- HEADER --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    {{-- ===================================================== --}}
+
+    <div class="dashboard-header mb-4">
 
         <div>
-            <h2 class="fw-bold mb-1">
-                Laporan Business Intelligence
+
+            <h2 class="fw-bold text-white mb-1">
+
+                <i class="bi bi-bar-chart-line-fill me-2"></i>
+
+                Business Intelligence Analytics
+
             </h2>
 
-            <p class="text-muted mb-0">
-                Dashboard analisis pendapatan dan prediksi laundry
+            <p class="text-white opacity-75 mb-0">
+
+                Analisis historis dan insight pendapatan usaha laundry
+
             </p>
+
+        </div>
+
+        <div>
+
+            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">
+
+                <i class="bi bi-cpu me-1"></i>
+
+                Smart Analytics
+
+            </span>
+
         </div>
 
     </div>
 
 
-    {{-- FILTER --}}
-    <div class="card shadow-sm border-0 mb-4">
 
-        <div class="card-body">
+    {{-- ===================================================== --}}
+    {{-- FILTER SECTION --}}
+    {{-- ===================================================== --}}
+
+    <div class="card dashboard-card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-4">
 
             <form method="GET">
 
-                <div class="row">
+                <div class="row g-3 align-items-end">
 
-                    <div class="col-md-4">
+                    {{-- START DATE --}}
+                    <div class="col-xl-3 col-md-6">
 
-                        <label class="form-label">
+                        <label class="form-label fw-semibold">
                             Tanggal Awal
                         </label>
 
-                        <input type="date" name="start_date" value="{{ $start }}" class="form-control">
+                        <input
+                            type="date"
+                            name="start_date"
+                            value="{{ $start }}"
+                            class="form-control custom-input">
 
                     </div>
 
-                    <div class="col-md-4">
 
-                        <label class="form-label">
+                    {{-- END DATE --}}
+                    <div class="col-xl-3 col-md-6">
+
+                        <label class="form-label fw-semibold">
                             Tanggal Akhir
                         </label>
 
-                        <input type="date" name="end_date" value="{{ $end }}" class="form-control">
+                        <input
+                            type="date"
+                            name="end_date"
+                            value="{{ $end }}"
+                            class="form-control custom-input">
 
                     </div>
 
-                    <div class="col-md-4 d-flex align-items-end">
 
-                        <button class="btn btn-primary w-100">
-                            Filter Data
+                    {{-- QUICK FILTER --}}
+                    <div class="col-xl-3 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Quick Filter
+                        </label>
+
+                        <select
+                            class="form-select custom-input"
+                            onchange="window.location.href=this.value">
+
+                            <option>
+                                Quick Filter
+                            </option>
+
+                            <option
+                                value="?start_date={{ now()->subDays(7)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
+                                7 Hari
+                            </option>
+
+                            <option
+                                value="?start_date={{ now()->subDays(30)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
+                                30 Hari
+                            </option>
+
+                            <option
+                                value="?start_date={{ now()->subMonths(3)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}">
+                                3 Bulan
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    {{-- BUTTON FILTER --}}
+                    <div class="col-xl-3 col-md-6">
+
+                        <button class="btn btn-dashboard w-100">
+
+                            <i class="bi bi-funnel-fill me-2"></i>
+
+                            Filter Analytics
+
                         </button>
 
                     </div>
@@ -61,268 +140,988 @@
 
             </form>
 
-            {{-- QUICK FILTER --}}
-            <div class="mt-3">
-
-                <a href="?start_date={{ now()->subDays(7)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}"
-                    class="btn btn-outline-primary btn-sm">
-                    7 Hari
-                </a>
-
-                <a href="?start_date={{ now()->subDays(30)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}"
-                    class="btn btn-outline-success btn-sm">
-                    30 Hari
-                </a>
-
-                <a href="?start_date={{ now()->subMonths(3)->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}"
-                    class="btn btn-outline-warning btn-sm">
-                    3 Bulan
-                </a>
-
-                <a href="?start_date={{ now()->subYear()->format('Y-m-d') }}&end_date={{ now()->format('Y-m-d') }}"
-                    class="btn btn-outline-dark btn-sm">
-                    1 Tahun
-                </a>
-
-            </div>
-
         </div>
 
     </div>
 
 
-    {{-- SUMMARY --}}
-    <div class="row mb-4">
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm bg-success text-white">
-                <div class="card-body">
+    {{-- ===================================================== --}}
+    {{-- KPI SECTION --}}
+    {{-- ===================================================== --}}
 
-                    <h6>Total Pendapatan</h6>
+    <div class="row g-4 mb-4">
 
-                    <h4>
+        {{-- TOTAL PENDAPATAN --}}
+        <div class="col-xl-3 col-md-6">
+
+            <div class="kpi-card revenue-card">
+
+                <div class="kpi-icon">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
+
+                <div class="kpi-content">
+
+                    <p class="kpi-label">
+                        Total Pendapatan
+                    </p>
+
+                    <h3 class="kpi-value">
                         Rp {{ number_format($sumPendapatan,0,',','.') }}
-                    </h4>
+                    </h3>
 
                 </div>
+
             </div>
+
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm bg-primary text-white">
-                <div class="card-body">
 
-                    <h6>Total Transaksi</h6>
+        {{-- TOTAL TRANSAKSI --}}
+        <div class="col-xl-3 col-md-6">
 
-                    <h4>{{ number_format($sumTransaksi) }}</h4>
+            <div class="kpi-card transaksi-card">
+
+                <div class="kpi-icon">
+                    <i class="bi bi-receipt-cutoff"></i>
+                </div>
+
+                <div class="kpi-content">
+
+                    <p class="kpi-label">
+                        Total Transaksi
+                    </p>
+
+                    <h3 class="kpi-value">
+                        {{ number_format($sumTransaksi) }}
+                    </h3>
 
                 </div>
+
             </div>
+
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm bg-warning text-white">
-                <div class="card-body">
 
-                    <h6>Rata-rata Pendapatan</h6>
+        {{-- RATA-RATA PENDAPATAN --}}
+        <div class="col-xl-3 col-md-6">
 
-                    <h4>
+            <div class="kpi-card avg-card">
+
+                <div class="kpi-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+
+                <div class="kpi-content">
+
+                    <p class="kpi-label">
+                        Rata-rata Pendapatan
+                    </p>
+
+                    <h3 class="kpi-value">
                         Rp {{ number_format($rataPendapatan,0,',','.') }}
-                    </h4>
+                    </h3>
 
                 </div>
+
             </div>
+
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm bg-dark text-white">
-                <div class="card-body">
 
-                    <h6>Akurasi Model</h6>
+        {{-- AKURASI MODEL --}}
+        <div class="col-xl-3 col-md-6">
 
-                    <h4>
+            <div class="kpi-card akurasi-card">
+
+                <div class="kpi-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+
+                <div class="kpi-content">
+
+                    <p class="kpi-label">
+                        Akurasi Model
+                    </p>
+
+                    <h3 class="kpi-value">
                         {{ number_format($akurasi,2) }}%
-                    </h4>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-
-            <div class="card border-0 shadow-sm bg-danger text-white">
-
-                <div class="card-body">
-
-                    <h6>Hari Teramai</h6>
-
-                    <h4>
-                        {{ $namaHariTeramai }}
-                    </h4>
-
-                    <small>
-                        {{ number_format($maxHari) }} transaksi
-                    </small>
+                    </h3>
 
                 </div>
 
             </div>
 
         </div>
-    </div>
 
-    {{-- LAYANAN --}}
-    <div class="row mb-4">
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm bg-info text-white">
-                <div class="card-body">
 
-                    <h6>Reguler Kiloan</h6>
+    {{-- ===================================================== --}}
+    {{-- MINI KPI SECTION --}}
+    {{-- ===================================================== --}}
 
-                    <h4>{{ number_format($sumRegulerKiloan) }}</h4>
+    <div class="row g-4 mb-5">
 
-                </div>
+        {{-- REGULER KILOAN --}}
+        <div class="col-xl-2 col-md-3 col-6">
+
+            <div class="mini-kpi">
+
+                <p>Reguler Kiloan</p>
+
+                <h4>{{ $sumRegulerKiloan }}</h4>
+
             </div>
+
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm bg-danger text-white">
-                <div class="card-body">
 
-                    <h6>Ekspres Kiloan</h6>
+        {{-- EKSPRES KILOAN --}}
+        <div class="col-xl-2 col-md-3 col-6">
 
-                    <h4>{{ number_format($sumEkspresKiloan) }}</h4>
+            <div class="mini-kpi">
 
-                </div>
+                <p>Ekspres Kiloan</p>
+
+                <h4>{{ $sumEkspresKiloan }}</h4>
+
             </div>
+
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm bg-secondary text-white">
-                <div class="card-body">
 
-                    <h6>Reguler Satuan</h6>
+        {{-- REGULER SATUAN --}}
+        <div class="col-xl-2 col-md-3 col-6">
 
-                    <h4>{{ number_format($sumRegulerSatuan) }}</h4>
+            <div class="mini-kpi">
 
-                </div>
+                <p>Reguler Satuan</p>
+
+                <h4>{{ $sumRegulerSatuan }}</h4>
+
             </div>
+
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm bg-primary text-white">
-                <div class="card-body">
 
-                    <h6>Ekspres Satuan</h6>
+        {{-- EKSPRES SATUAN --}}
+        <div class="col-xl-2 col-md-3 col-6">
 
-                    <h4>{{ number_format($sumEkspresSatuan) }}</h4>
+            <div class="mini-kpi">
 
-                </div>
+                <p>Ekspres Satuan</p>
+
+                <h4>{{ $sumEkspresSatuan }}</h4>
+
             </div>
+
         </div>
 
     </div>
 
-    {{-- ========================================= --}}
-    {{-- INSIGHT BUSINESS INTELLIGENCE --}}
-    {{-- ========================================= --}}
+{{-- ===================================================== --}}
+{{-- BUSINESS INSIGHT SECTION --}}
+{{-- ===================================================== --}}
 
-    <div class="row mb-4">
+<div class="row g-4 mb-5">
 
-        {{-- INSIGHT HARI TERAMAI --}}
-        <div class="col-md-6 mb-3">
+    {{-- MODEL --}}
+    <div class="col-xl-6">
 
-            <div class="alert alert-primary border-0 shadow-sm">
+        <div class="insight-card insight-success">
 
-                <h6 class="fw-bold mb-2">
-                    Insight Hari Teramai
-                </h6>
+            <div class="insight-icon">
 
-                Hari dengan aktivitas pelanggan tertinggi adalah
+                <i class="bi bi-cpu-fill"></i>
 
-                <b>{{ $namaHariTeramai }}</b>
+            </div>
+
+            <div class="insight-content">
+
+                <span class="insight-badge">
+
+                    Evaluasi Model
+
+                </span>
+
+                <h5 class="insight-title">
+
+                    {{ number_format($akurasi,2) }}%
+
+                </h5>
+
+                <p class="insight-desc">
+
+                    Model regresi memiliki performa
+
+                    <b>{{ $statusModel }}</b>
+
+                    berdasarkan evaluasi RMSE.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    {{-- PENDAPATAN --}}
+    <div class="col-xl-6">
+
+        <div class="insight-card insight-warning">
+
+            <div class="insight-icon">
+
+                <i class="bi bi-cash-coin"></i>
+
+            </div>
+
+            <div class="insight-content">
+
+                <span class="insight-badge">
+
+                    Pendapatan Tertinggi
+
+                </span>
+
+                <h5 class="insight-title">
+
+                    Rp {{ number_format($pendapatanTertinggi,0,',','.') }}
+
+                </h5>
+
+                <p class="insight-desc">
+
+                    Pendapatan tertinggi terjadi pada
+
+                    <b>{{ $tanggalPendapatanTertinggi }}</b>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{{-- ===================================================== --}}
+{{-- EXECUTIVE SUMMARY --}}
+{{-- ===================================================== --}}
+
+<div class="row mb-4">
+
+    <div class="col-12">
+
+        <div class="executive-summary">
+
+            <div class="summary-header">
+
+                <div>
+
+                    <span class="summary-badge">
+
+                        Executive Summary
+
+                    </span>
+
+                    <h4 class="summary-title">
+
+                        Business Intelligence Overview
+
+                    </h4>
+
+                </div>
+
+                <div class="summary-icon">
+
+                    <i class="bi bi-bar-chart-line-fill"></i>
+
+                </div>
+
+            </div>
+
+            <div class="summary-content">
+
+                Dalam periode analisis ini, total pendapatan laundry mencapai
+
+                <b>
+                    Rp {{ number_format($sumPendapatan,0,',','.') }}
+                </b>
 
                 dengan total
 
                 <b>
-                    {{ number_format($maxHari) }}
+                    {{ number_format($sumTransaksi) }}
                 </b>
 
                 transaksi.
+
+                Layanan
+
+                <b>
+                    {{ $layananTerlaris }}
+                </b>
+
+                menjadi layanan paling dominan.
+
+                Trend pendapatan menunjukkan kondisi
+
+                <b>
+                    {{ $trendPendapatan }}
+                </b>
+
+                dengan tingkat akurasi model prediksi sebesar
+
+                <b>
+                    {{ number_format($akurasi,2) }}%
+                </b>.
 
             </div>
 
         </div>
 
-        {{-- INSIGHT MODEL --}}
-        <div class="col-md-6 mb-3">
+    </div>
 
-            <div class="alert alert-success border-0 shadow-sm">
+</div>
 
-                <h6 class="fw-bold mb-2">
-                    Evaluasi Model Prediksi
-                </h6>
 
-                Model regresi memiliki tingkat akurasi
 
-                <b>
-                    {{ number_format($akurasi,2) }}%
-                </b>
+{{-- ===================================================== --}}
+{{-- TARGET VS REALISASI --}}
+{{-- ===================================================== --}}
 
-                dengan status
+<div class="row g-4 mb-4">
 
-                <span class="badge bg-success">
+    <div class="col-xl-6">
 
-                    {{ $statusModel }}
+        <div class="analytics-card p-4 h-100">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+
+                        Target vs Realisasi
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Perbandingan pendapatan aktual
+
+                    </p>
+
+                </div>
+
+                <i class="bi bi-bullseye fs-2 text-primary"></i>
+
+            </div>
+
+            @php
+
+                $persentaseTarget =
+                    ($sumPendapatan / $targetPendapatan) * 100;
+
+            @endphp
+
+            <div class="mb-3">
+
+                <div class="d-flex justify-content-between mb-2">
+
+                    <span class="fw-semibold">
+
+                        Target
+
+                    </span>
+
+                    <span>
+
+                        Rp {{ number_format($targetPendapatan,0,',','.') }}
+
+                    </span>
+
+                </div>
+
+                <div class="progress custom-progress">
+
+                    <div
+                        class="progress-bar bg-success"
+                        style="
+                            width:
+                            {{ min($persentaseTarget,100) }}%
+                        ">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-between">
+
+                <div>
+
+                    <small class="text-muted">
+
+                        Realisasi
+
+                    </small>
+
+                    <h4 class="fw-bold">
+
+                        Rp {{ number_format($sumPendapatan,0,',','.') }}
+
+                    </h4>
+
+                </div>
+
+                <div class="text-end">
+
+                    <small class="text-muted">
+
+                        Progress
+
+                    </small>
+
+                    <h4 class="fw-bold text-success">
+
+                        {{ number_format($persentaseTarget,1) }}%
+
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    {{-- TREND ANALYSIS --}}
+    <div class="col-xl-6">
+
+        <div class="analytics-card p-4 h-100">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+
+                        Trend Analysis
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Analisis tren pendapatan
+
+                    </p>
+
+                </div>
+
+                <i class="bi bi-graph-up-arrow fs-2 text-success"></i>
+
+            </div>
+
+            <div class="trend-analysis">
+
+                <div class="trend-item">
+
+                    <span class="trend-label">
+
+                        Trend Pendapatan
+
+                    </span>
+
+                    <h4 class="trend-value text-success">
+
+                        {{ $trendPendapatan }}
+
+                    </h4>
+
+                </div>
+
+                <div class="trend-item">
+
+                    <span class="trend-label">
+
+                        Growth Tertinggi
+
+                    </span>
+
+                    <h4 class="trend-value text-primary">
+
+                        {{ number_format($growthTertinggi,2) }}%
+
+                    </h4>
+
+                </div>
+
+                <div class="trend-item">
+
+                    <span class="trend-label">
+
+                        Hari Terbaik
+
+                    </span>
+
+                    <h4 class="trend-value text-danger">
+
+                        {{ $namaHariTeramai }}
+
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{{-- ===================================================== --}}
+{{-- INSIGHT OTOMATIS --}}
+{{-- ===================================================== --}}
+
+<div class="row g-4 mb-4">
+
+    <div class="col-12">
+
+        <div class="analytics-card p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+
+                        Smart Insight Analytics
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Insight otomatis berdasarkan data historis
+
+                    </p>
+
+                </div>
+
+                <i class="bi bi-lightbulb-fill fs-2 text-warning"></i>
+
+            </div>
+
+            <div class="row g-3">
+
+                {{-- INSIGHT 1 --}}
+                <div class="col-xl-6">
+
+                    <div class="smart-insight insight-success">
+
+                        <i class="bi bi-arrow-up-circle-fill"></i>
+
+                        <div>
+
+                            Pendapatan menunjukkan tren
+
+                            <b>{{ $trendPendapatan }}</b>
+
+                            selama periode analisis.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- INSIGHT 2 --}}
+                <div class="col-xl-6">
+
+                    <div class="smart-insight insight-primary">
+
+                        <i class="bi bi-stars"></i>
+
+                        <div>
+
+                            Layanan
+
+                            <b>{{ $layananTerlaris }}</b>
+
+                            mendominasi aktivitas laundry.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- INSIGHT 3 --}}
+                <div class="col-xl-6">
+
+                    <div class="smart-insight insight-warning">
+
+                        <i class="bi bi-calendar-week-fill"></i>
+
+                        <div>
+
+                            Hari paling ramai terjadi pada
+
+                            <b>{{ $namaHariTeramai }}</b>.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- INSIGHT 4 --}}
+                <div class="col-xl-6">
+
+                    <div class="smart-insight insight-danger">
+
+                        <i class="bi bi-cpu-fill"></i>
+
+                        <div>
+
+                            Model prediksi memiliki tingkat akurasi
+
+                            <b>{{ number_format($akurasi,2) }}%</b>.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{{-- ===================================================== --}}
+{{-- AKTUAL VS PREDIKSI TABLE --}}
+{{-- ===================================================== --}}
+
+<div class="row mb-5">
+
+    <div class="col-12">
+
+        <div class="analytics-card p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+
+                        Perbandingan Aktual vs Prediksi
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        Evaluasi performa model regresi
+
+                    </p>
+
+                </div>
+
+                <i class="bi bi-table fs-2 text-primary"></i>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Tanggal</th>
+
+                            <th>Aktual</th>
+
+                            <th>Prediksi</th>
+
+                            <th>Selisih</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach($perbandinganPrediksi as $item)
+
+                        <tr>
+
+                            <td>
+
+                                {{ $item['tanggal'] }}
+
+                            </td>
+
+                            <td>
+
+                                Rp {{ number_format($item['aktual'],0,',','.') }}
+
+                            </td>
+
+                            <td>
+
+                                Rp {{ number_format($item['prediksi'],0,',','.') }}
+
+                            </td>
+
+                            <td>
+
+                                Rp {{ number_format($item['selisih'],0,',','.') }}
+
+                            </td>
+
+                            <td>
+
+                                @if($item['selisih'] < 50000)
+
+                                    <span class="badge bg-success">
+
+                                        Baik
+
+                                    </span>
+
+                                @else
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Perlu Evaluasi
+
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+                        </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+    {{-- CHART --}}
+<div class="row g-4 mb-4">
+
+    {{-- HERO CHART --}}
+    <div class="col-12">
+
+        <div class="analytics-card hero-card">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h4 class="chart-title">
+                        Grafik Pendapatan
+                    </h4>
+
+                    <p class="chart-subtitle">
+                        Analisis tren pendapatan laundry
+                    </p>
+
+                </div>
+
+                <span class="badge bg-success px-3 py-2">
+                    Business Intelligence
+                </span>
+
+            </div>
+
+            <div class="chart-hero">
+
+                <canvas id="chartPendapatan"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{{-- ===================================================== --}}
+{{-- ROW 2 --}}
+{{-- ===================================================== --}}
+
+<div class="row g-4 mb-4">
+
+    {{-- TRANSAKSI --}}
+    <div class="col-xl-8">
+
+        <div class="analytics-card h-100">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h5 class="chart-title">
+                        Grafik Transaksi
+                    </h5>
+
+                    <p class="chart-subtitle">
+                        Aktivitas transaksi laundry
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="chart-medium">
+
+                <canvas id="chartTransaksi"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- PIE --}}
+    <div class="col-xl-4">
+
+        <div class="analytics-card h-100">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h5 class="chart-title">
+                        Komposisi Layanan
+                    </h5>
+
+                    <p class="chart-subtitle">
+                        Distribusi layanan laundry
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="chart-donut">
+
+                <canvas id="chartPie"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{{-- ===================================================== --}}
+{{-- ROW 3 --}}
+{{-- ===================================================== --}}
+
+<div class="row g-4 mb-4">
+
+    {{-- TREND --}}
+    <div class="col-xl-6">
+
+        <div class="analytics-card h-100">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h5 class="chart-title">
+                        Trend Layanan
+                    </h5>
+
+                    <p class="chart-subtitle">
+                        Pergerakan layanan laundry
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="chart-secondary">
+
+                <canvas id="chartLayanan"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- PREDIKSI --}}
+    <div class="col-xl-6">
+
+        <div class="analytics-card h-100">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h5 class="chart-title">
+                        Aktual vs Prediksi
+                    </h5>
+
+                    <p class="chart-subtitle">
+                        Analisis forecasting regresi linear
+                    </p>
+
+                </div>
+
+                <span class="badge bg-primary px-3 py-2">
+
+                    Regresi Linear
 
                 </span>
 
             </div>
 
-        </div>
+            <div class="chart-secondary">
 
-        {{-- PENDAPATAN TERTINGGI --}}
-        <div class="col-md-6 mb-3">
-
-            <div class="alert alert-warning border-0 shadow-sm">
-
-                <h6 class="fw-bold mb-2">
-                    Pendapatan Tertinggi
-                </h6>
-
-                Pendapatan tertinggi terjadi pada
-
-                <b>
-                    {{ $tanggalPendapatanTertinggi }}
-                </b>
-
-                sebesar
-
-                <b>
-                    Rp {{ number_format($pendapatanTertinggi,0,',','.') }}
-                </b>
-
-            </div>
-
-        </div>
-
-        {{-- GROWTH --}}
-        <div class="col-md-6 mb-3">
-
-            <div class="alert alert-danger border-0 shadow-sm">
-
-                <h6 class="fw-bold mb-2">
-                    Pertumbuhan Pendapatan
-                </h6>
-
-                Pertumbuhan pendapatan tertinggi mencapai
-
-                <b>
-                    {{ number_format($growthTertinggi,2) }}%
-                </b>
-
-                dibandingkan hari sebelumnya.
+                <canvas id="chartPrediksi"></canvas>
 
             </div>
 
@@ -330,860 +1129,1451 @@
 
     </div>
 
-    {{-- CHART --}}
-    <div class="row">
+</div>
 
-        {{-- PENDAPATAN --}}
-        <div class="col-md-6 mb-4">
 
-            <div class="dashboard-card" onclick="openChart('chartPendapatan')">
 
-                <div class="card-body">
+{{-- ===================================================== --}}
+{{-- ROW 4 --}}
+{{-- ===================================================== --}}
 
-                    <h5 class="mb-3">
-                        Grafik Pendapatan
+<div class="row g-4 mb-4">
+
+    {{-- GROWTH --}}
+    <div class="col-xl-6">
+
+        <div class="analytics-card h-100">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h5 class="chart-title">
+                        Pertumbuhan Pendapatan
                     </h5>
 
-                    <div class="chart-container">
+                    <p class="chart-subtitle">
+                        Analisis growth pendapatan
+                    </p>
 
-                        <canvas id="chartPendapatan"></canvas>
-
-                    </div>
                 </div>
+
+            </div>
+
+            <div class="chart-secondary">
+
+                <canvas id="chartGrowth"></canvas>
 
             </div>
 
         </div>
 
-        {{-- TRANSAKSI --}}
-        <div class="col-md-6 mb-4">
-            <div class="dashboard-card" onclick="openChart('chartTransaksi')">
+    </div>
 
-                <div class="card-body">
 
-                    <h5 class="mb-3">
-                        Grafik Transaksi
+    {{-- TOP LAYANAN --}}
+    <div class="col-xl-6">
+
+        <div class="analytics-card h-100">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h5 class="chart-title">
+                        Top Layanan
                     </h5>
-                    <div class="chart-container">
-                        <canvas id="chartTransaksi"></canvas>
-                    </div>
+
+                    <p class="chart-subtitle">
+                        Layanan paling dominan
+                    </p>
+
                 </div>
+
+            </div>
+
+            <div class="chart-secondary">
+
+                <canvas id="chartTopLayanan"></canvas>
 
             </div>
 
         </div>
 
-        {{-- PIE --}}
-        <div class="col-md-6 mb-4">
+    </div>
 
-            <div class="dashboard-card" onclick="openChart('chartPie')">
+</div>
 
-                <div class="card-body">
 
-                    <h5 class="mb-3">
-                        Komposisi Layanan
+
+{{-- ===================================================== --}}
+{{-- ROW 5 --}}
+{{-- ===================================================== --}}
+
+<div class="row g-4 mb-4">
+
+    <div class="col-12">
+
+        <div class="analytics-card">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h5 class="chart-title">
+                        Analisis Hari Teramai
                     </h5>
-                    <div class="chart-container">
-                        <canvas id="chartPie"></canvas>
-                    </div>
+
+                    <p class="chart-subtitle">
+                        Pola transaksi berdasarkan hari
+                    </p>
+
                 </div>
+
+                <span class="badge bg-danger px-3 py-2">
+
+                    Analytics
+
+                </span>
+
+            </div>
+
+            <div class="chart-large">
+
+                <canvas id="chartHariRamai"></canvas>
 
             </div>
 
         </div>
 
-        {{-- TREND --}}
-        <div class="col-md-6 mb-4">
+    </div>
 
-            <div class="dashboard-card" onclick="openChart('chartLayanan')">
+</div>
 
-                <div class="card-body">
 
-                    <h5 class="mb-3">
-                        Trend Layanan
-                    </h5>
-                    <div class="chart-container">
-                        <canvas id="chartLayanan"></canvas>
-                    </div>
-                </div>
+
+{{-- ===================================================== --}}
+{{-- MODAL --}}
+{{-- ===================================================== --}}
+
+<div class="modal fade" id="chartModal" tabindex="-1">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+
+        <div class="modal-content border-0 rounded-4">
+
+            <div class="modal-header border-0">
+
+                <h5 class="modal-title fw-bold">
+                    Detail Grafik
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <canvas id="modalCanvas"></canvas>
 
             </div>
 
         </div>
 
-        {{-- AKTUAL VS PREDIKSI --}}
-        <div class="col-md-6 mb-4">
+    </div>
 
-            <div class="dashboard-card" onclick="openChart('chartPrediksi')">
+</div>
+@endsection
 
-                <div class="card-body">
+@section('scripts')
 
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
 
-                        <h5 class="mb-0">
-                            Aktual vs Prediksi
-                        </h5>
+/* =========================================================
+   GLOBAL
+========================================================= */
 
-                        <span class="badge bg-success">
-                            Regresi Linear
-                        </span>
+body {
 
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="chartPrediksi" height="120"></canvas>
-                    </div>
-                </div>
+    background: #f4f7fb;
+}
 
-            </div>
 
-        </div>
 
-        {{-- PERTUMBUHAN PENDAPATAN --}}
-        <div class="col-md-6 mb-4">
+/* =========================================================
+   DASHBOARD HEADER
+========================================================= */
 
-            <div class="dashboard-card" onclick="openChart('chartGrowth')">
+.dashboard-header {
 
-                <div class="card-body">
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
 
-                    <h5 class="mb-3">
-                        Grafik Pertumbuhan Pendapatan
-                    </h5>
-                    <div class="chart-container">
-                        <canvas id="chartGrowth"></canvas>
-                    </div>
-                </div>
+    border-radius: 24px;
 
-            </div>
+    padding: 30px;
 
-        </div>
+    display: flex;
 
-        {{-- TOP LAYANAN --}}
-        <div class="col-md-6 mb-4">
+    justify-content: space-between;
 
-            <div class="dashboard-card" onclick="openChart('chartTopLayanan')">
+    align-items: center;
 
-                <div class="card-body">
+    margin-bottom: 24px;
+}
 
-                    <h5 class="mb-3">
-                        Top Layanan Paling Laris
-                    </h5>
-                    <div class="chart-container">
-                        <canvas id="chartTopLayanan"></canvas>
-                    </div>
-                </div>
 
-            </div>
 
-        </div>
-
-        {{-- HARI TERAMAI --}}
-        <div class="col-md-6 mb-4">
-
-            <div class="dashboard-card" onclick="openChart('chartHariRamai')">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-
-                        <h5 class="mb-0">
-                            Analisis Hari Teramai
-                        </h5>
-
-                        <span class="badge bg-danger">
-                            Business Intelligence
-                        </span>
-
-                    </div>
-
-                    <div class="chart-container">
-
-                        <canvas id="chartHariRamai"></canvas>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {{-- MODAL --}}
-        <div class="modal fade" id="chartModal" tabindex="-1">
-
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-
-                <div class="modal-content">
-
-                    <div class="modal-header">
-
-                        <h5 class="modal-title">
-                            Detail Grafik
-                        </h5>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal">
-                        </button>
-
-                    </div>
-
-                    <div class="modal-body">
-
-                        <canvas id="modalCanvas"></canvas>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        @endsection
-
-        @section('scripts')
-
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-        <style>
-        body {
-            background: #f4f6f9;
-        }
-
-        /* ======================================
+/* =========================================================
    CARD
-====================================== */
+========================================================= */
 
-        .dashboard-card {
+.analytics-card,
+.dashboard-card {
 
-            border: none;
+   background: #ffffff;
 
-            border-radius: 18px;
+    border: none;
 
-            background: white;
+    border-radius: 24px;
 
-            overflow: hidden;
+    overflow: hidden;
 
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
 
-            transition: 0.3s;
+    transition: 0.3s;
 
-            cursor: pointer;
-        }
+    height: 100%;
 
-        .dashboard-card:hover {
+    padding: 28px;
+}
 
-            transform: translateY(-3px);
+.analytics-card:hover,
+.dashboard-card:hover {
 
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-        }
+    transform: translateY(-4px);
 
-        /* ======================================
-   CHART
-====================================== */
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
 
-.chart-container {
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.card-header-custom {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 24px;
+}
+
+.chart-title {
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    color: #111827;
+
+    margin-bottom: 4px;
+}
+
+.chart-subtitle {
+
+    font-size: 14px;
+
+    color: #6b7280;
+
+    margin: 0;
+}
+
+
+
+/* =========================================================
+   INPUT & BUTTON
+========================================================= */
+
+.custom-input {
+
+    height: 55px;
+
+    border-radius: 14px;
+
+    border: 1px solid #dee2e6;
+
+    padding: 0 16px;
+}
+
+.custom-input:focus {
+
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 0.15rem rgba(37,99,235,0.15);
+}
+
+.btn-dashboard {
+
+    height: 55px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+
+    color: #ffffff;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+.btn-dashboard:hover {
+
+    opacity: 0.95;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+
+
+/* =========================================================
+   KPI CARD
+========================================================= */
+
+.kpi-card {
 
     position: relative;
 
-    height: 320px !important;
+    overflow: hidden;
 
-    width: 100%;
+    border-radius: 22px;
 
-    min-height: 320px;
+    padding: 22px;
+
+    min-height: 150px;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    transition: 0.3s;
 }
 
-.chart-container canvas{
+.kpi-card:hover {
 
-    width:100% !important;
-
-    height:100% !important;
-
-    display:block;
+    transform: translateY(-3px);
 }
 
-        /* ======================================
+/* =========================================================
+   KPI COLOR
+========================================================= */
+
+.revenue-card {
+
+    background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.transaksi-card {
+
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+.avg-card {
+
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.akurasi-card {
+
+    background: linear-gradient(135deg, #7c3aed, #9333ea);
+}
+
+.hari-card {
+
+    background: linear-gradient(135deg, #ef4444, #fb7185);
+}
+
+
+
+/* =========================================================
+   KPI CONTENT
+========================================================= */
+
+.kpi-label {
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    opacity: 0.92;
+
+    margin-bottom: 10px;
+}
+
+.kpi-value {
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    margin: 0;
+}
+
+.kpi-small {
+
+    font-size: 13px;
+
+    opacity: 0.88;
+}
+
+
+
+/* =========================================================
+   KPI ICON
+========================================================= */
+
+.kpi-icon {
+
+    position: absolute;
+
+    top: 18px;
+
+    right: 18px;
+
+    font-size: 42px;
+
+    opacity: 0.14;
+}
+
+
+
+/* =========================================================
+   MINI KPI
+========================================================= */
+.mini-kpi {
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 18px;
+
+    height: 100%;
+
+    box-shadow: 0 4px 18px rgba(0,0,0,.04);
+
+    transition: 0.3s;
+}
+
+.mini-kpi:hover {
+
+    transform: translateY(-2px);
+}
+
+.mini-kpi p {
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    margin-bottom: 8px;
+}
+
+.mini-kpi h4 {
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    margin: 0;
+
+    color: #111827;
+}
+
+/* =========================================================
+   INSIGHT CARD
+========================================================= */
+
+.insight-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    padding: 26px;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 20px;
+
+    background: white;
+
+    box-shadow: 0 4px 20px rgba(0,0,0,.04);
+
+    transition: .3s;
+}
+
+.insight-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 10px 28px rgba(0,0,0,.08);
+}
+
+
+
+/* =========================================================
+   INSIGHT COLOR
+========================================================= */
+
+.insight-primary {
+
+    border-left: 5px solid #2563eb;
+}
+
+.insight-success {
+
+    border-left: 5px solid #10b981;
+}
+
+.insight-warning {
+
+    border-left: 5px solid #f59e0b;
+}
+
+.insight-danger {
+
+    border-left: 5px solid #ef4444;
+}
+
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.insight-icon {
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 24px;
+
+    flex-shrink: 0;
+
+    background: rgba(37,99,235,.08);
+
+    color: #2563eb;
+}
+
+.insight-success .insight-icon {
+
+    background: rgba(16,185,129,.08);
+
+    color: #10b981;
+}
+
+.insight-warning .insight-icon {
+
+    background: rgba(245,158,11,.10);
+
+    color: #f59e0b;
+}
+
+.insight-danger .insight-icon {
+
+    background: rgba(239,68,68,.10);
+
+    color: #ef4444;
+}
+
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.insight-badge {
+
+    display: inline-block;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    margin-bottom: 12px;
+}
+
+.insight-title {
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    color: #111827;
+
+    margin-bottom: 10px;
+}
+
+.insight-desc {
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   CHART SIZE
+========================================================= */
+
+.chart-hero {
+
+    position: relative;
+
+    height: 430px;
+}
+
+.chart-medium {
+
+    position: relative;
+
+    height: 340px;
+}
+
+.chart-secondary {
+
+    position: relative;
+
+    height: 320px;
+}
+
+.chart-large {
+
+    position: relative;
+
+    height: 400px;
+}
+
+.chart-donut {
+
+    position: relative;
+
+    height: 320px;
+
+    max-width: 320px;
+
+    margin: auto;
+}
+
+
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+canvas {
+
+    width: 100% !important;
+
+    height: 100% !important;
+}
+
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.badge {
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+    padding: 10px 14px;
+}
+
+
+
+/* =========================================================
    MODAL
-====================================== */
+========================================================= */
 
-        #modalCanvas {
+.modal-content {
 
-            height: 70vh !important;
-        }
+    border: none;
 
-        .modal-content {
+    border-radius: 24px;
+}
 
-            border: none;
+#modalCanvas {
 
-            border-radius: 20px;
-        }
-        </style>
+    height: 70vh !important;
+}
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 16px;
+    }
+
+    .chart-hero {
+
+        height: 300px;
+    }
+
+    .chart-large {
+
+        height: 300px;
+    }
+
+    .chart-medium,
+    .chart-secondary {
+
+        height: 260px;
+    }
+
+    .chart-donut {
+
+        height: 260px;
+    }
+
+    .kpi-value {
+
+        font-size: 32px;
+    }
+
+    .mini-kpi h4 {
+
+        font-size: 26px;
+    }
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function () {        // ========================
-        // DATA
-        // ========================
+document.addEventListener('DOMContentLoaded', function () {
 
-        const tanggal = @json($tanggal);
+    // =====================================================
+    // DATA SOURCE
+    // =====================================================
 
-        const pendapatan = @json($pendapatan);
+    const tanggal           = @json($tanggal);
 
-        const transaksi = @json($totalTransaksi);
+    const pendapatan        = @json($pendapatan);
 
-        const regulerKiloan = @json($regulerKiloan);
+    const transaksi         = @json($totalTransaksi);
 
-        const ekspresKiloan = @json($ekspresKiloan);
+    const regulerKiloan     = @json($regulerKiloan);
 
-        const regulerSatuan = @json($regulerSatuan);
+    const ekspresKiloan     = @json($ekspresKiloan);
 
-        const ekspresSatuan = @json($ekspresSatuan);
+    const regulerSatuan     = @json($regulerSatuan);
 
-        const ma7 = @json($ma7);
+    const ekspresSatuan     = @json($ekspresSatuan);
 
-        const prediksi = @json($prediksi);
+    const ma7               = @json($ma7);
 
-        const growthPendapatan = @json($growthPendapatan);
+    const prediksi          = @json($prediksi);
 
-        const hariLabels = @json($hariLabels);
+    const growthPendapatan  = @json($growthPendapatan);
 
-        const hariValues = @json($hariValues);
+    const hariLabels        = @json($hariLabels);
 
-        // ========================
-        // OPTION GLOBAL
-        // ========================
+    const hariValues        = @json($hariValues);
 
-        const globalOptions = {
+
+
+    // =====================================================
+    // COLOR PALETTE
+    // =====================================================
+
+    const colors = {
+
+        primary     : '#2563eb',
+
+        success     : '#10b981',
+
+        warning     : '#f59e0b',
+
+        danger      : '#ef4444',
+
+        purple      : '#8b5cf6',
+
+        pink        : '#ec4899',
+
+        cyan        : '#06b6d4',
+
+        gray        : '#6b7280'
+    };
+
+
+
+    // =====================================================
+    // GLOBAL OPTIONS
+    // =====================================================
+
+    const globalOptions = {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        interaction: {
+
+            intersect: false,
+
+            mode: 'index'
+        },
+
+        plugins: {
+
+            legend: {
+
+                position: 'top',
+
+                labels: {
+
+                    usePointStyle: true,
+
+                    padding: 18,
+
+                    font: {
+
+                        size: 12
+                    }
+                }
+            }
+        },
+
+        scales: {
+
+            x: {
+
+                grid: {
+
+                    display: false
+                },
+
+                ticks: {
+
+                    color: colors.gray
+                }
+            },
+
+            y: {
+
+                beginAtZero: true,
+
+                grid: {
+
+                    color: 'rgba(0,0,0,0.05)'
+                },
+
+                ticks: {
+
+                    color: colors.gray
+                }
+            }
+        }
+    };
+
+
+
+    // =====================================================
+    // MODAL ZOOM
+    // =====================================================
+
+    const modal =
+        new bootstrap.Modal(
+            document.getElementById('chartModal')
+        );
+
+    let modalChart = null;
+
+
+
+    function enableChartZoom(chart, type) {
+
+        chart.canvas.onclick = function () {
+
+            modal.show();
+
+            const ctx =
+                document
+                    .getElementById('modalCanvas')
+                    .getContext('2d');
+
+            if (modalChart) {
+
+                modalChart.destroy();
+            }
+
+            modalChart = new Chart(ctx, {
+
+                type: type,
+
+                data: chart.data,
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false
+                }
+            });
+        };
+    }
+
+
+
+    // =====================================================
+    // HELPER
+    // =====================================================
+
+    function createChart(id, config, type) {
+
+        const chart = new Chart(
+
+            document.getElementById(id),
+
+            config
+        );
+
+        enableChartZoom(chart, type);
+
+        return chart;
+    }
+
+
+
+    // =====================================================
+    // 1. GRAFIK PENDAPATAN
+    // =====================================================
+
+    createChart('chartPendapatan', {
+
+        type: 'line',
+
+        data: {
+
+            labels: tanggal,
+
+            datasets: [
+
+                {
+
+                    label: 'Pendapatan',
+
+                    data: pendapatan,
+
+                    borderColor: colors.success,
+
+                    backgroundColor:
+                        'rgba(16,185,129,.12)',
+
+                    borderWidth: 3,
+
+                    tension: 0.4,
+
+                    fill: true,
+
+                    pointRadius: 3
+                },
+
+                {
+
+                    label: 'Moving Average 7 Hari',
+
+                    data: ma7,
+
+                    borderColor: colors.danger,
+
+                    borderDash: [6,6],
+
+                    borderWidth: 2,
+
+                    tension: 0.4,
+
+                    pointRadius: 0
+                }
+            ]
+        },
+
+        options: globalOptions
+
+    }, 'line');
+
+
+
+    // =====================================================
+    // 2. GRAFIK TRANSAKSI
+    // =====================================================
+
+    createChart('chartTransaksi', {
+
+        type: 'bar',
+
+        data: {
+
+            labels: tanggal,
+
+            datasets: [
+
+                {
+
+                    label: 'Total',
+
+                    data: transaksi,
+
+                    backgroundColor: colors.primary,
+
+                    borderRadius: 10
+                },
+
+                {
+
+                    label: 'Reg Kilo',
+
+                    data: regulerKiloan,
+
+                    backgroundColor: colors.success,
+
+                    borderRadius: 10
+                },
+
+                {
+
+                    label: 'Exp Kilo',
+
+                    data: ekspresKiloan,
+
+                    backgroundColor: colors.warning,
+
+                    borderRadius: 10
+                },
+
+                {
+
+                    label: 'Reg Sat',
+
+                    data: regulerSatuan,
+
+                    backgroundColor: colors.purple,
+
+                    borderRadius: 10
+                },
+
+                {
+
+                    label: 'Exp Sat',
+
+                    data: ekspresSatuan,
+
+                    backgroundColor: colors.pink,
+
+                    borderRadius: 10
+                }
+            ]
+        },
+
+        options: globalOptions
+
+    }, 'bar');
+
+
+
+    // =====================================================
+    // 3. KOMPOSISI LAYANAN
+    // =====================================================
+
+    createChart('chartPie', {
+
+        type: 'doughnut',
+
+        data: {
+
+            labels: [
+
+                'Reg Kilo',
+                'Exp Kilo',
+                'Reg Sat',
+                'Exp Sat'
+            ],
+
+            datasets: [
+
+                {
+
+                    data: [
+
+                        {{ $sumRegulerKiloan }},
+                        {{ $sumEkspresKiloan }},
+                        {{ $sumRegulerSatuan }},
+                        {{ $sumEkspresSatuan }}
+                    ],
+
+                    backgroundColor: [
+
+                        colors.primary,
+                        colors.success,
+                        colors.warning,
+                        colors.purple
+                    ],
+
+                    borderWidth: 0
+                }
+            ]
+        },
+
+        options: {
 
             responsive: true,
 
             maintainAspectRatio: false,
 
-            interaction: {
-
-                intersect: false,
-
-                mode: 'index'
-            },
+            cutout: '60%',
 
             plugins: {
 
                 legend: {
 
-                    position: 'top',
-
-                    labels: {
-
-                        usePointStyle: true,
-
-                        padding: 15
-                    }
+                    position: 'bottom'
                 }
-            },
+            }
+        }
+
+    }, 'doughnut');
+
+
+
+    // =====================================================
+    // 4. TREND LAYANAN
+    // =====================================================
+
+    createChart('chartLayanan', {
+
+        type: 'line',
+
+        data: {
+
+            labels: tanggal,
+
+            datasets: [
+
+                {
+
+                    label: 'Reg Kilo',
+
+                    data: regulerKiloan,
+
+                    borderColor: colors.primary,
+
+                    tension: 0.4
+                },
+
+                {
+
+                    label: 'Exp Kilo',
+
+                    data: ekspresKiloan,
+
+                    borderColor: colors.success,
+
+                    tension: 0.4
+                },
+
+                {
+
+                    label: 'Reg Sat',
+
+                    data: regulerSatuan,
+
+                    borderColor: colors.warning,
+
+                    tension: 0.4
+                },
+
+                {
+
+                    label: 'Exp Sat',
+
+                    data: ekspresSatuan,
+
+                    borderColor: colors.purple,
+
+                    tension: 0.4
+                }
+            ]
+        },
+
+        options: globalOptions
+
+    }, 'line');
+
+
+
+    // =====================================================
+    // 5. AKTUAL VS PREDIKSI
+    // =====================================================
+
+    createChart('chartPrediksi', {
+
+        type: 'line',
+
+        data: {
+
+            labels: tanggal,
+
+            datasets: [
+
+                {
+
+                    label: 'Aktual',
+
+                    data: pendapatan,
+
+                    borderColor: colors.primary,
+
+                    backgroundColor:
+                        'rgba(37,99,235,.10)',
+
+                    borderWidth: 3,
+
+                    tension: 0.4,
+
+                    fill: true
+                },
+
+                {
+
+                    label: 'Prediksi',
+
+                    data: prediksi,
+
+                    borderColor: colors.danger,
+
+                    borderDash: [6,6],
+
+                    borderWidth: 3,
+
+                    tension: 0.4
+                }
+            ]
+        },
+
+        options: globalOptions
+
+    }, 'line');
+
+
+
+    // =====================================================
+    // 6. GROWTH PENDAPATAN
+    // =====================================================
+
+    createChart('chartGrowth', {
+
+        type: 'line',
+
+        data: {
+
+            labels: tanggal,
+
+            datasets: [
+
+                {
+
+                    label: 'Growth %',
+
+                    data: growthPendapatan,
+
+                    borderColor: colors.cyan,
+
+                    backgroundColor:
+                        'rgba(6,182,212,.12)',
+
+                    fill: true,
+
+                    tension: 0.4,
+
+                    borderWidth: 3
+                }
+            ]
+        },
+
+        options: globalOptions
+
+    }, 'line');
+
+
+
+    // =====================================================
+    // 7. TOP LAYANAN
+    // =====================================================
+
+    createChart('chartTopLayanan', {
+
+        type: 'polarArea',
+
+        data: {
+
+            labels: [
+
+                'Reg Kilo',
+                'Exp Kilo',
+                'Reg Sat',
+                'Exp Sat'
+            ],
+
+            datasets: [
+
+                {
+
+                    data: [
+
+                        {{ $sumRegulerKiloan }},
+                        {{ $sumEkspresKiloan }},
+                        {{ $sumRegulerSatuan }},
+                        {{ $sumEkspresSatuan }}
+                    ],
+
+                    backgroundColor: [
+
+                        colors.primary,
+                        colors.success,
+                        colors.warning,
+                        colors.purple
+                    ]
+                }
+            ]
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false
+        }
+
+    }, 'polarArea');
+
+    // =====================================================
+    // 8. HARI TERAMAI
+    // =====================================================
+
+    createChart('chartHariRamai', {
+
+        type: 'radar',
+
+        data: {
+
+            labels: hariLabels,
+
+            datasets: [
+
+                {
+
+                    label: 'Jumlah Transaksi',
+
+                    data: hariValues,
+
+                    borderColor: colors.pink,
+
+                    backgroundColor:
+                        'rgba(236,72,153,.2)',
+
+                    borderWidth: 2,
+
+                    pointBackgroundColor:
+                        colors.pink
+                }
+            ]
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
 
             scales: {
 
-                x: {
-
-                    grid: {
-                        display: false
-                    },
-
-                    ticks: {
-
-                        autoSkip: true,
-
-                        maxTicksLimit: 8
-                    }
-                },
-
-                y: {
+                r: {
 
                     beginAtZero: true,
 
                     grid: {
 
-                        color: 'rgba(0,0,0,0.05)'
+                        color:
+                            'rgba(0,0,0,.08)'
                     }
                 }
             }
-        };
-
-        // ========================
-        // GRAFIK PENDAPATAN
-        // ========================
-
-        new Chart(document.getElementById('chartPendapatan'), {
-
-            type: 'line',
-
-            data: {
-
-                labels: tanggal,
-
-                datasets: [
-
-                    {
-                        label: 'Pendapatan',
-
-                        data: pendapatan,
-
-                        borderColor: '#198754',
-
-                        backgroundColor: 'rgba(25,135,84,0.1)',
-
-                        borderWidth: 3,
-
-                        tension: 0.4,
-
-                        fill: true
-                    },
-
-                    {
-                        label: 'Moving Average 7 Hari',
-
-                        data: ma7,
-
-                        borderColor: '#dc3545',
-
-                        borderDash: [5, 5],
-
-                        borderWidth: 2,
-
-                        tension: 0.4
-                    }
-
-                ]
-            },
-
-            options: globalOptions
-        });
-
-        // ========================
-        // GRAFIK TRANSAKSI
-        // ========================
-
-        new Chart(document.getElementById('chartTransaksi'), {
-
-            type: 'bar',
-
-            data: {
-
-                labels: tanggal,
-
-                datasets: [
-
-                    {
-                        label: 'Total',
-
-                        data: transaksi
-                    },
-
-                    {
-                        label: 'Reg Kilo',
-
-                        data: regulerKiloan
-                    },
-
-                    {
-                        label: 'Exp Kilo',
-
-                        data: ekspresKiloan
-                    },
-
-                    {
-                        label: 'Reg Sat',
-
-                        data: regulerSatuan
-                    },
-
-                    {
-                        label: 'Exp Sat',
-
-                        data: ekspresSatuan
-                    }
-
-                ]
-            },
-
-            options: globalOptions
-        });
-
-        // ========================
-        // KOMPOSISI LAYANAN
-        // ========================
-
-        new Chart(document.getElementById('chartPie'), {
-
-            type: 'doughnut',
-
-            data: {
-
-                labels: [
-
-                    'Reg Kilo',
-
-                    'Exp Kilo',
-
-                    'Reg Sat',
-
-                    'Exp Sat'
-                ],
-
-                datasets: [
-
-                    {
-
-                        data: [
-
-                            {{ $sumRegulerKiloan }},
-                            {{ $sumEkspresKiloan }},
-                            {{ $sumRegulerSatuan }},
-                            {{ $sumEkspresSatuan }}
-
-                        ]
-                    }
-
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: true
-            }
-        });
-
-        // ========================
-        // TREND LAYANAN
-        // ========================
-
-        new Chart(document.getElementById('chartLayanan'), {
-
-            type: 'line',
-
-            data: {
-
-                labels: tanggal,
-
-                datasets: [
-
-                    {
-                        label: 'Reg Kilo',
-
-                        data: regulerKiloan,
-
-                        tension: 0.4
-                    },
-
-                    {
-                        label: 'Exp Kilo',
-
-                        data: ekspresKiloan,
-
-                        tension: 0.4
-                    },
-
-                    {
-                        label: 'Reg Sat',
-
-                        data: regulerSatuan,
-
-                        tension: 0.4
-                    },
-
-                    {
-                        label: 'Exp Sat',
-
-                        data: ekspresSatuan,
-
-                        tension: 0.4
-                    }
-
-                ]
-            },
-
-            options: globalOptions
-        });
-
-        // ========================
-        // AKTUAL VS PREDIKSI
-        // ========================
-
-        new Chart(document.getElementById('chartPrediksi'), {
-
-            type: 'line',
-
-            data: {
-
-                labels: tanggal,
-
-                datasets: [
-
-                    {
-                        label: 'Aktual',
-
-                        data: pendapatan,
-
-                        borderColor: '#0d6efd',
-
-                        backgroundColor: 'rgba(13,110,253,0.1)',
-
-                        borderWidth: 3,
-
-                        tension: 0.4,
-
-                        fill: true
-                    },
-
-                    {
-                        label: 'Prediksi',
-
-                        data: prediksi,
-
-                        borderColor: '#198754',
-
-                        borderDash: [5, 5],
-
-                        borderWidth: 3,
-
-                        tension: 0.4
-                    }
-
-                ]
-            },
-
-            options: globalOptions
-        });
-
-        // ========================
-        // PERTUMBUHAN PENDAPATAN
-        // ========================
-
-        new Chart(document.getElementById('chartGrowth'), {
-
-            type: 'bar',
-
-            data: {
-
-                labels: tanggal,
-
-                datasets: [
-
-                    {
-                        label: 'Growth %',
-
-                        data: growthPendapatan,
-
-                        backgroundColor: growthPendapatan.map(v =>
-                            v >= 0 ?
-                            '#198754' :
-                            '#dc3545'
-                        )
-                    }
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    tooltip: {
-
-                        callbacks: {
-
-                            label: function(context) {
-
-                                return context.raw + '%';
-                            }
-                        }
-                    }
-                },
-
-                scales: {
-
-                    y: {
-
-                        ticks: {
-
-                            callback: function(value) {
-
-                                return value + '%';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // ========================
-        // TOP LAYANAN
-        // ========================
-
-        new Chart(document.getElementById('chartTopLayanan'), {
-
-            type: 'bar',
-
-            data: {
-
-                labels: [
-
-                    'Reguler Kiloan',
-                    'Ekspres Kiloan',
-                    'Reguler Satuan',
-                    'Ekspres Satuan'
-                ],
-
-                datasets: [
-
-                    {
-                        label: 'Total Layanan',
-
-                        data: [
-
-    {{ $sumRegulerKiloan }},
-    {{ $sumEkspresKiloan }},
-    {{ $sumRegulerSatuan }},
-    {{ $sumEkspresSatuan }}
-
-],
-
-                        backgroundColor: [
-
-                            '#0d6efd',
-                            '#198754',
-                            '#ffc107',
-                            '#dc3545'
-                        ],
-
-                        borderRadius: 8
-                    }
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                indexAxis: 'y',
-
-                plugins: {
-
-                    legend: {
-                        display: false
-                    }
-                },
-
-                scales: {
-
-                    x: {
-
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-        // ========================
-        // HARI TERAMAI
-        // ========================
-
-        new Chart(document.getElementById('chartHariRamai'), {
-
-            type: 'polarArea',
-
-            data: {
-
-                labels: hariLabels,
-
-                datasets: [
-
-                    {
-                        label: 'Total Transaksi',
-
-                        data: hariValues,
-
-                        backgroundColor: [
-
-                            '#0d6efd',
-                            '#198754',
-                            '#ffc107',
-                            '#dc3545',
-                            '#6610f2',
-                            '#fd7e14',
-                            '#20c997'
-                        ]
-                    }
-                ]
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    legend: {
-
-                        position: 'right'
-                    }
-                }
-            }
-        });
-
-        // ========================
-        // MODAL ZOOM
-        // ========================
-        let modalChart = null;
-
-        function openChart(chartId) {
-            const originalChart =
-                Chart.getChart(chartId);
-
-            if (!originalChart) return;
-
-            const modal =
-                new bootstrap.Modal(
-                    document.getElementById('chartModal')
-                );
-
-            modal.show();
-
-            setTimeout(() => {
-
-                const ctx =
-                    document.getElementById('modalCanvas');
-
-                if (modalChart) {
-                    modalChart.destroy();
-                }
-
-                modalChart = new Chart(ctx, {
-
-                    type: originalChart.config.type,
-
-                    data: JSON.parse(
-                        JSON.stringify(originalChart.config.data)
-                    ),
-
-                    options: {
-
-                        ...originalChart.config.options,
-
-                        responsive: true,
-
-                        maintainAspectRatio: false
-                    }
-                });
-
-            }, 300);
         }
+
+    }, 'radar');
+
 });
+
 </script>
-        @endsection
+@endsection

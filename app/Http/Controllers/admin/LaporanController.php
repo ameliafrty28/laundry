@@ -333,7 +333,131 @@ $growthTertinggi =
     : 0;
 
 
+// =====================================================
+// TOTAL LAYANAN
+// =====================================================
 
+$totalRegKilo =
+    array_sum($regulerKiloan);
+
+$totalExpKilo =
+    array_sum($ekspresKiloan);
+
+$totalRegSatuan =
+    array_sum($regulerSatuan);
+
+$totalExpSatuan =
+    array_sum($ekspresSatuan);
+
+
+
+// =====================================================
+// LAYANAN TERLARIS
+// =====================================================
+
+$layananList = [
+
+    'Reguler Kiloan' => $totalRegKilo,
+
+    'Ekspres Kiloan' => $totalExpKilo,
+
+    'Reguler Satuan' => $totalRegSatuan,
+
+    'Ekspres Satuan' => $totalExpSatuan,
+];
+
+
+
+$maxLayanan =
+    max($layananList);
+
+
+
+$layananTerlaris =
+    array_search(
+        $maxLayanan,
+        $layananList
+    );
+
+
+
+// =====================================================
+// TREND PENDAPATAN
+// =====================================================
+
+$trendPendapatan = 'Stabil';
+
+if (count($pendapatan) >= 2) {
+
+    $first =
+        $pendapatan[0];
+
+    $last =
+        end($pendapatan);
+
+    if ($last > $first) {
+
+        $trendPendapatan =
+            'Meningkat';
+    }
+
+    elseif ($last < $first) {
+
+        $trendPendapatan =
+            'Menurun';
+    }
+}
+
+
+
+// =====================================================
+// JUMLAH HARI FILTER
+// =====================================================
+
+$jumlahHari =
+    count($pendapatan);
+
+
+
+// =====================================================
+// TARGET DINAMIS
+// =====================================================
+
+$targetPendapatan =
+
+    ($rataPendapatan * $jumlahHari)
+
+    * 1.10;
+
+
+// =====================================================
+// PERBANDINGAN PREDIKSI
+// =====================================================
+
+$perbandinganPrediksi = [];
+
+foreach ($tanggal as $index => $tgl) {
+
+    $aktual =
+        $pendapatan[$index] ?? 0;
+
+    $pred =
+        $prediksi[$index] ?? 0;
+
+    $selisih =
+        abs($aktual - $pred);
+
+    $perbandinganPrediksi[] = [
+
+        'tanggal'  => $tgl,
+
+        'aktual'   => $aktual,
+
+        'prediksi' => $pred,
+
+        'selisih'  => $selisih,
+    ];
+}
     
         // ========================
         // RETURN VIEW
@@ -388,7 +512,12 @@ $growthTertinggi =
     'pendapatanTertinggi',
     'tanggalPendapatanTertinggi',
 
-    'growthTertinggi'
+    'growthTertinggi',
+
+    'layananTerlaris',
+    'trendPendapatan',
+    'targetPendapatan',
+    'perbandinganPrediksi'
 ));    
 }
 }
