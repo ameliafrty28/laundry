@@ -821,7 +821,6 @@
 {{-- ===================================================== --}}
 {{-- AKTUAL VS PREDIKSI TABLE --}}
 {{-- ===================================================== --}}
-
 <div class="row mb-5">
 
     <div class="col-12">
@@ -854,7 +853,7 @@
 
                 <table class="table table-hover align-middle">
 
-                    <thead>
+                    <thead class="table-light">
 
                         <tr>
 
@@ -874,7 +873,7 @@
 
                     <tbody>
 
-                        @foreach($perbandinganPrediksi as $item)
+                        @forelse($perbandinganPrediksi as $item)
 
                         <tr>
 
@@ -906,7 +905,7 @@
 
                                 @if($item['selisih'] < 50000)
 
-                                    <span class="badge bg-success">
+                                    <span class="badge bg-success px-3 py-2">
 
                                         Baik
 
@@ -914,7 +913,7 @@
 
                                 @else
 
-                                    <span class="badge bg-warning text-dark">
+                                    <span class="badge bg-warning text-dark px-3 py-2">
 
                                         Perlu Evaluasi
 
@@ -926,11 +925,30 @@
 
                         </tr>
 
-                        @endforeach
+                        @empty
+
+                        <tr>
+
+                            <td colspan="5" class="text-center text-muted py-4">
+
+                                Tidak ada data
+
+                            </td>
+
+                        </tr>
+
+                        @endforelse
 
                     </tbody>
 
                 </table>
+
+            </div>
+
+            {{-- PAGINATION --}}
+            <div class="d-flex justify-content-end mt-3">
+
+                {{ $perbandinganPrediksi->links('pagination::bootstrap-5') }}
 
             </div>
 
@@ -939,6 +957,7 @@
     </div>
 
 </div>
+
     {{-- CHART --}}
 <div class="row g-4 mb-4">
 
@@ -2502,7 +2521,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         colors.primary,
                         colors.success,
                         colors.warning,
-                        colors.purple
+                        colors.pink
                     ]
                 }
             ]

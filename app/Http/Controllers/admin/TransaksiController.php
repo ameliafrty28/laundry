@@ -12,14 +12,45 @@ use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $data = Transaksi::withTrashed()
-            ->with('pelanggan')
-            ->latest()
-            ->get();
 
-        return view('admin.transaksi.index', compact('data'));
+            ->with('pelanggan', 'user')
+
+            // SEARCH
+            ->when($request->search, function ($query) use ($request) {
+
+                $query->whereHas('pelanggan', function ($q) use ($request) {
+
+                    $q->where(
+                        'pelanggan_nama',
+                        'like',
+                        '%' . $request->search . '%'
+                    );
+                });
+            })
+
+            // FILTER STATUS
+            ->when($request->status, function ($query) use ($request) {
+
+                $query->where(
+                    'transaksi_status_pembayaran',
+                    $request->status
+                );
+            })
+
+            ->latest()
+
+            // PAGINATION
+            ->paginate(20)
+
+            ->withQueryString();
+
+        return view(
+            'admin.transaksi.index',
+            compact('data')
+        );
     }
 
     public function create(Request $request)

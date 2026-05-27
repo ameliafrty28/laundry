@@ -11,11 +11,51 @@ class LayananController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+        public function index(Request $request)
     {
-        $data = Layanan::all();
-        return view('kasir.layanan.index', compact('data'));
+        $data = Layanan::query()
+
+            // SEARCH
+            ->when($request->search, function ($query) use ($request) {
+
+                $query->where(
+                    'layanan_nama',
+                    'like',
+                    '%' . $request->search . '%'
+                );
+            })
+
+            // FILTER JENIS
+            ->when($request->jenis, function ($query) use ($request) {
+
+                $query->where(
+                    'layanan_jenis',
+                    $request->jenis
+                );
+            })
+
+            // FILTER TIPE
+            ->when($request->tipe, function ($query) use ($request) {
+
+                $query->where(
+                    'layanan_tipe',
+                    $request->tipe
+                );
+            })
+
+            ->latest('layanan_id')
+
+            // PAGINATION
+            ->paginate(10)
+
+            ->withQueryString();
+
+        return view(
+            'kasir.layanan.index',
+            compact('data')
+        );
     }
+
 
     /**
      * Show the form for creating a new resource.

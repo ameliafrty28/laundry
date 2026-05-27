@@ -39,6 +39,43 @@
         </div>
 
 
+        {{-- ========================================= --}}
+        {{-- SEARCH --}}
+        {{-- ========================================= --}}
+
+        <form method="GET" class="row g-3 mb-4">
+
+            <div class="col-md-5">
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    class="form-control"
+                    placeholder="Cari nama / WhatsApp pelanggan...">
+
+            </div>
+
+            <div class="col-md-2 d-flex gap-2">
+
+                <button class="btn btn-primary w-100">
+
+                    Search
+
+                </button>
+
+                <a
+                    href="/admin/pelanggan"
+                    class="btn btn-secondary w-100">
+
+                    Reset
+
+                </a>
+
+            </div>
+
+        </form>
+
 
         {{-- ========================================= --}}
         {{-- TABLE --}}
@@ -79,7 +116,9 @@
                     <tr>
 
                         <td>
-                            {{ $i + 1 }}
+
+                            {{ $data->firstItem() + $i }}
+
                         </td>
 
                         <td>
@@ -100,30 +139,35 @@
 
                         <td>
 
-                            <a
-                                href="/admin/pelanggan/{{ $d->pelanggan_id }}/edit"
-                                class="btn btn-warning btn-sm">
+                            <div class="d-flex gap-2">
 
-                                Edit
+                                <a
+                                    href="/admin/pelanggan/{{ $d->pelanggan_id }}/edit"
+                                    class="btn btn-warning btn-sm">
 
-                            </a>
+                                    Edit
 
-                            <form
-                                action="/admin/pelanggan/{{ $d->pelanggan_id }}"
-                                method="POST"
-                                class="d-inline">
+                                </a>
 
-                                @csrf
-                                @method('DELETE')
+                                <form
+                                    action="/admin/pelanggan/{{ $d->pelanggan_id }}"
+                                    method="POST"
+                                    class="d-inline">
 
-                                <button
-                                    class="btn btn-danger btn-sm">
+                                    @csrf
+                                    @method('DELETE')
 
-                                    Hapus
+                                    <button
+                                        onclick="return confirm('Hapus data pelanggan?')"
+                                        class="btn btn-danger btn-sm">
 
-                                </button>
+                                        Hapus
 
-                            </form>
+                                    </button>
+
+                                </form>
+
+                            </div>
 
                         </td>
 
@@ -133,7 +177,8 @@
 
                     <tr>
 
-                        <td colspan="4" class="text-center text-muted py-4">
+                        <td colspan="4"
+                            class="text-center text-muted py-4">
 
                             Tidak ada data pelanggan
 
@@ -146,6 +191,35 @@
                 </tbody>
 
             </table>
+
+        </div>
+
+
+        {{-- ========================================= --}}
+        {{-- PAGINATION --}}
+        {{-- ========================================= --}}
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+
+            <small class="text-muted">
+
+                Menampilkan
+
+                {{ $data->firstItem() ?? 0 }}
+
+                -
+
+                {{ $data->lastItem() ?? 0 }}
+
+                dari
+
+                {{ $data->total() }}
+
+                data pelanggan
+
+            </small>
+
+            {{ $data->links('pagination::bootstrap-5') }}
 
         </div>
 

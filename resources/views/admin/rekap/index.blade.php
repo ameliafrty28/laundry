@@ -495,7 +495,8 @@
 
                         <td>
 
-                            {{ $loop->iteration }}
+                            {{ $rekap->firstItem() + $loop->index }}
+
 
                         </td>
 
@@ -586,6 +587,31 @@
                 </tbody>
 
             </table>
+         
+            <div class="d-flex justify-content-between align-items-center mt-4">
+
+                <small class="text-muted">
+
+                    Menampilkan
+
+                    {{ $rekap->firstItem() ?? 0 }}
+
+                    -
+
+                    {{ $rekap->lastItem() ?? 0 }}
+
+                    dari
+
+                    {{ $rekap->total() }}
+
+                    data rekap
+
+                </small>
+
+                {{ $rekap->links('pagination::bootstrap-5') }}
+
+            </div>
+
 
         </div>
 

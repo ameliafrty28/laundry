@@ -58,14 +58,16 @@ class RekapAdminController extends Controller
         // =====================================================
         // DATA REKAP
         // =====================================================
+    $rekap =
 
-        $rekap =
+        (clone $query)
 
-            (clone $query)
+        ->orderByDesc('rekap_tanggal')
 
-            ->orderByDesc('rekap_tanggal')
+        ->paginate(10)
 
-            ->get();
+        ->withQueryString();
+
 
 
 

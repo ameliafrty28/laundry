@@ -38,7 +38,75 @@
 
         </div>
 
+    {{-- ========================================= --}}
+    {{-- SEARCH & FILTER --}}
+    {{-- ========================================= --}}
 
+    <form method="GET" class="row g-3 mb-4">
+
+        {{-- SEARCH --}}
+        <div class="col-md-4">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                class="form-control"
+                placeholder="Cari pelanggan...">
+
+        </div>
+
+        {{-- FILTER STATUS --}}
+        <div class="col-md-3">
+
+            <select
+                name="status"
+                class="form-select">
+
+                <option value="">
+                    Semua Status
+                </option>
+
+                <option
+                    value="lunas"
+                    {{ request('status') == 'lunas' ? 'selected' : '' }}>
+
+                    Lunas
+
+                </option>
+
+                <option
+                    value="belum_lunas"
+                    {{ request('status') == 'belum_lunas' ? 'selected' : '' }}>
+
+                    Belum Lunas
+
+                </option>
+
+            </select>
+
+        </div>
+
+        {{-- BUTTON --}}
+        <div class="col-md-2 d-flex gap-2">
+
+            <button class="btn btn-primary w-100">
+
+                Filter
+
+            </button>
+
+            <a
+                href="/kasir/transaksi"
+                class="btn btn-secondary w-100">
+
+                Reset
+
+            </a>
+
+        </div>
+
+    </form>
 
         {{-- ========================================= --}}
         {{-- TABLE --}}
@@ -103,7 +171,7 @@
                         {{-- NO --}}
                         <td>
 
-                            {{ $i + 1 }}
+                            {{ $data->firstItem() + $i }}
 
                         </td>
 
@@ -319,6 +387,29 @@
                 </tbody>
 
             </table>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+
+                <small class="text-muted">
+
+                    Menampilkan
+
+                    {{ $data->firstItem() ?? 0 }}
+
+                    -
+
+                    {{ $data->lastItem() ?? 0 }}
+
+                    dari
+
+                    {{ $data->total() }}
+
+                    data transaksi
+
+                </small>
+
+                {{ $data->links('pagination::bootstrap-5') }}
+
+            </div>
 
         </div>
 

@@ -11,10 +11,37 @@ class PelangganController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Pelanggan::all();
-        return view('kasir.pelanggan.index', compact('data'));
+        $data = Pelanggan::query()
+
+            // SEARCH
+            ->when($request->search, function ($query) use ($request) {
+
+                $query->where(
+                    'pelanggan_nama',
+                    'like',
+                    '%' . $request->search . '%'
+                )
+
+                ->orWhere(
+                    'pelanggan_wa',
+                    'like',
+                    '%' . $request->search . '%'
+                );
+            })
+
+            ->latest('pelanggan_id')
+
+            // PAGINATION
+            ->paginate(10)
+
+            ->withQueryString();
+
+        return view(
+            'kasir.pelanggan.index',
+            compact('data')
+        );
     }
 
     /**

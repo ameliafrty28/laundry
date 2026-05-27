@@ -38,6 +38,106 @@
 
         </div>
 
+    {{-- ========================================= --}}
+    {{-- SEARCH & FILTER --}}
+    {{-- ========================================= --}}
+
+    <form method="GET" class="row g-3 mb-4">
+
+        {{-- SEARCH --}}
+        <div class="col-md-4">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                class="form-control"
+                placeholder="Cari layanan...">
+
+        </div>
+
+        {{-- FILTER JENIS --}}
+        <div class="col-md-3">
+
+            <select
+                name="jenis"
+                class="form-select">
+
+                <option value="">
+                    Semua Jenis
+                </option>
+
+                <option
+                    value="Reguler"
+                    {{ request('jenis') == 'Reguler' ? 'selected' : '' }}>
+
+                    Reguler
+
+                </option>
+
+                <option
+                    value="Expres"
+                    {{ request('jenis') == 'Expres' ? 'selected' : '' }}>
+
+                    Expres
+
+                </option>
+
+            </select>
+
+        </div>
+
+        {{-- FILTER TIPE --}}
+        <div class="col-md-3">
+
+            <select
+                name="tipe"
+                class="form-select">
+
+                <option value="">
+                    Semua Tipe
+                </option>
+
+                <option
+                    value="Kiloan"
+                    {{ request('tipe') == 'Kiloan' ? 'selected' : '' }}>
+
+                    Kiloan
+
+                </option>
+
+                <option
+                    value="Satuan"
+                    {{ request('tipe') == 'Satuan' ? 'selected' : '' }}>
+
+                    Satuan
+
+                </option>
+
+            </select>
+
+        </div>
+
+        {{-- BUTTON --}}
+        <div class="col-md-2 d-flex gap-2">
+
+            <button class="btn btn-primary w-100">
+
+                Filter
+
+            </button>
+
+            <a
+                href="/kasir/layanan"
+                class="btn btn-secondary w-100">
+
+                Reset
+
+            </a>
+
+        </div>
+
+    </form>
 
 
         {{-- ========================================= --}}
@@ -91,7 +191,8 @@
                         {{-- NO --}}
                         <td>
 
-                            {{ $i + 1 }}
+                        {{ $data->firstItem() + $i }}
+
 
                         </td>
 
@@ -181,6 +282,30 @@
                 </tbody>
 
             </table>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+
+                <small class="text-muted">
+
+                    Menampilkan
+
+                    {{ $data->firstItem() ?? 0 }}
+
+                    -
+
+                    {{ $data->lastItem() ?? 0 }}
+
+                    dari
+
+                    {{ $data->total() }}
+
+                    data layanan
+
+                </small>
+
+                {{ $data->links('pagination::bootstrap-5') }}
+
+            </div>
 
         </div>
 

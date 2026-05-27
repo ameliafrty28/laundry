@@ -38,7 +38,42 @@
 
         </div>
 
+    {{-- ========================================= --}}
+    {{-- SEARCH --}}
+    {{-- ========================================= --}}
 
+    <form method="GET" class="row g-3 mb-4">
+
+        <div class="col-md-5">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                class="form-control"
+                placeholder="Cari nama / WhatsApp pelanggan...">
+
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+
+            <button class="btn btn-primary w-100">
+
+                Search
+
+            </button>
+
+            <a
+                href="/kasir/pelanggan"
+                class="btn btn-secondary w-100">
+
+                Reset
+
+            </a>
+
+        </div>
+
+    </form>
 
         {{-- ========================================= --}}
         {{-- TABLE --}}
@@ -83,7 +118,7 @@
                         {{-- NO --}}
                         <td>
 
-                            {{ $i + 1 }}
+                            {{ $data->firstItem() + $i }}
 
                         </td>
 
@@ -166,6 +201,29 @@
 
             </table>
 
+            <div class="d-flex justify-content-between align-items-center mt-4">
+
+                <small class="text-muted">
+
+                    Menampilkan
+
+                    {{ $data->firstItem() ?? 0 }}
+
+                    -
+
+                    {{ $data->lastItem() ?? 0 }}
+
+                    dari
+
+                    {{ $data->total() }}
+
+                    data pelanggan
+
+                </small>
+
+                {{ $data->links('pagination::bootstrap-5') }}
+
+            </div>
         </div>
 
     </div>

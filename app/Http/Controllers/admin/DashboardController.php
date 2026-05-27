@@ -209,14 +209,40 @@ class DashboardController extends Controller
         $akurasi =
             max(0, 100 - $mape);
 
-        // =========================================
-        // DATA TABEL
-        // =========================================
+// =========================================
+// DATA HISTORIS TABLE
+// =========================================
 
-        $rekap = (clone $query)
-            ->latest('rekap_tanggal')
-            ->limit(10)
-            ->get();
+$rekap = DB::table('rekap_harian')
+
+    // FILTER JIKA TANGGAL DIPILIH
+    ->when(
+
+        $tanggalAwal && $tanggalAkhir,
+
+        function ($query) use (
+            $tanggalAwal,
+            $tanggalAkhir
+        ) {
+
+            $query->whereBetween(
+                'rekap_tanggal',
+                [
+                    $tanggalAwal,
+                    $tanggalAkhir
+                ]
+            );
+        }
+    )
+
+    // URUTKAN DATA TERBARU
+    ->orderByDesc('rekap_tanggal')
+
+    // PAGINATION
+    ->paginate(10)
+
+    ->withQueryString();
+
 
         // =========================================
         // RETURN VIEW

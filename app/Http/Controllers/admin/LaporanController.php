@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator; use Illuminate\Support\Collection;
 
 class LaporanController extends Controller
 {
@@ -429,7 +430,6 @@ $targetPendapatan =
 
     * 1.10;
 
-
 // =====================================================
 // PERBANDINGAN PREDIKSI
 // =====================================================
@@ -458,6 +458,48 @@ foreach ($tanggal as $index => $tgl) {
         'selisih'  => $selisih,
     ];
 }
+
+
+// =====================================================
+// PAGINATION TABLE
+// =====================================================
+
+$currentPage =
+    LengthAwarePaginator::resolveCurrentPage();
+
+$collection =
+    collect($perbandinganPrediksi);
+
+$perPage = 10;
+
+$currentItems =
+    $collection
+        ->slice(
+            ($currentPage - 1) * $perPage,
+            $perPage
+        )
+        ->values();
+
+$perbandinganPrediksi =
+    new LengthAwarePaginator(
+
+        $currentItems,
+
+        $collection->count(),
+
+        $perPage,
+
+        $currentPage,
+
+        [
+
+            'path' => request()->url(),
+
+            'query' => request()->query()
+        ]
+    );
+
+
     
         // ========================
         // RETURN VIEW

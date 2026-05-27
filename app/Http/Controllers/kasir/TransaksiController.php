@@ -12,10 +12,50 @@ use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = Transaksi::with(['pelanggan','detail.layanan'])->latest()->get();
-        return view('kasir.transaksi.index', compact('data'));
+        $data = Transaksi::with([
+                'pelanggan',
+                'detail.layanan'
+            ])
+
+            // SEARCH PELANGGAN
+            ->when($request->search, function ($query) use ($request) {
+
+                $query->whereHas(
+                    'pelanggan',
+
+                    function ($q) use ($request) {
+
+                        $q->where(
+                            'pelanggan_nama',
+                            'like',
+                            '%' . $request->search . '%'
+                        );
+                    }
+                );
+            })
+
+            // FILTER STATUS PEMBAYARAN
+            ->when($request->status, function ($query) use ($request) {
+
+                $query->where(
+                    'transaksi_status_pembayaran',
+                    $request->status
+                );
+            })
+
+            ->latest()
+
+            // PAGINATION
+            ->paginate(20)
+
+            ->withQueryString();
+
+        return view(
+            'kasir.transaksi.index',
+            compact('data')
+        );
     }
 
     public function create(Request $request)

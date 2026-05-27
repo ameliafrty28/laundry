@@ -444,92 +444,144 @@
     {{-- ===================================== --}}
     {{-- TABEL DATA --}}
     {{-- ===================================== --}}
+<div class="card dashboard-card border-0 shadow-sm">
 
-    <div class="card dashboard-card border-0 shadow-sm">
+    <div class="card-body p-4">
 
-        <div class="card-body p-4">
+        {{-- HEADER --}}
+        <div class="d-flex justify-content-between align-items-center mb-4">
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
 
-                <div>
+                <h5 class="fw-bold mb-1">
 
-                    <h5 class="fw-bold mb-1">
-                        Data Historis Pendapatan
-                    </h5>
+                    Data Historis Pendapatan
 
-                    <p class="text-muted mb-0">
-                        Rekap transaksi dan pendapatan laundry
-                    </p>
+                </h5>
 
-                </div>
+                <p class="text-muted mb-0">
 
-            </div>
+                    Rekap transaksi dan pendapatan laundry
 
-            <div class="table-responsive">
-
-                <table class="table align-middle modern-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Tanggal</th>
-                            <th>Pendapatan</th>
-                            <th>Transaksi</th>
-                            <th>Reg Kilo</th>
-                            <th>Exp Kilo</th>
-                            <th>Reg Satuan</th>
-                            <th>Exp Satuan</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach($rekap as $r)
-
-                        <tr>
-
-                            <td>
-                                {{ \Carbon\Carbon::parse($r->rekap_tanggal)->format('d M Y') }}
-                            </td>
-
-                            <td class="fw-bold text-success">
-
-                                Rp {{ number_format($r->rekap_total_pendapatan,0,',','.') }}
-
-                            </td>
-
-                            <td>
-                                {{ $r->rekap_total_transaksi }}
-                            </td>
-
-                            <td>
-                                {{ $r->rekap_reguler_kiloan }}
-                            </td>
-
-                            <td>
-                                {{ $r->rekap_ekspres_kiloan }}
-                            </td>
-
-                            <td>
-                                {{ $r->rekap_reguler_satuan }}
-                            </td>
-
-                            <td>
-                                {{ $r->rekap_ekspres_satuan }}
-                            </td>
-
-                        </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
+                </p>
 
             </div>
+        </div>
+
+        {{-- TABLE --}}
+        <div class="table-responsive">
+
+            <table class="table align-middle modern-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Tanggal</th>
+                        <th>Pendapatan</th>
+                        <th>Transaksi</th>
+                        <th>Reg Kilo</th>
+                        <th>Exp Kilo</th>
+                        <th>Reg Satuan</th>
+                        <th>Exp Satuan</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @forelse($rekap as $r)
+
+                    <tr>
+
+                        <td>
+
+                            {{ \Carbon\Carbon::parse($r->rekap_tanggal)->format('d M Y') }}
+
+                        </td>
+
+                        <td class="fw-bold text-success">
+
+                            Rp {{ number_format($r->rekap_total_pendapatan,0,',','.') }}
+
+                        </td>
+
+                        <td>
+
+                            {{ $r->rekap_total_transaksi }}
+
+                        </td>
+
+                        <td>
+
+                            {{ $r->rekap_reguler_kiloan }}
+
+                        </td>
+
+                        <td>
+
+                            {{ $r->rekap_ekspres_kiloan }}
+
+                        </td>
+
+                        <td>
+
+                            {{ $r->rekap_reguler_satuan }}
+
+                        </td>
+
+                        <td>
+
+                            {{ $r->rekap_ekspres_satuan }}
+
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="7"
+                            class="text-center text-muted py-4">
+
+                            Tidak ada data historis
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {{-- FOOTER --}}
+        <div class="d-flex justify-content-between align-items-center mt-3">
+
+            <small class="text-muted">
+
+                Menampilkan
+
+                {{ $rekap->firstItem() }}
+
+                -
+
+                {{ $rekap->lastItem() }}
+
+                dari
+
+                {{ $rekap->total() }}
+
+                data
+
+            </small>
+
+            {{ $rekap->links('pagination::bootstrap-5') }}
 
         </div>
 
