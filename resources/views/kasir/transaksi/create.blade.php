@@ -12,7 +12,7 @@
 
     <div class="mb-3">
         <label>Tanggal Transaksi</label>
-        <input type="date" name="transaksi_tanggal" 
+        <input type="datetime-local" name="transaksi_tanggal" 
             class="form-control @error('transaksi_tanggal') is-invalid @enderror"
             value="{{ old('transaksi_tanggal') }}" required>
 

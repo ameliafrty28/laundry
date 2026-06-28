@@ -46,7 +46,7 @@ class UserController extends Controller
 
             'user_nama' => 'required',
 
-            'user_username' => 'required|unique:data,user_username',
+            'user_username' => 'required|unique:users,user_username',
 
             'user_password' => 'required|min:4',
 
@@ -105,7 +105,7 @@ class UserController extends Controller
 
             'user_username' =>
 
-                'required|unique:data,user_username,'
+                'required|unique:users,user_username,'
 
                 .$id.
 

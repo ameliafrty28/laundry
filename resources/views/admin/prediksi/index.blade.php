@@ -291,20 +291,6 @@
 
             <div class="mini-card">
 
-                <h6>MSE</h6>
-
-                <h4>
-                    {{ number_format($mse,0,',','.') }}
-                </h4>
-
-            </div>
-
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-
-            <div class="mini-card">
-
                 <h6>RMSE</h6>
 
                 <h4>

@@ -80,6 +80,19 @@ Route::prefix('kasir')
             Route::get('/transaksi/{id}/bayar', 'bayar')->name('transaksi.bayar');
             Route::post('/transaksi/{id}/bayar', 'prosesBayar')->name('transaksi.prosesBayar');
         });
+        Route::controller(RekapAdminController::class)->group(function () {
+
+            Route::get(
+                '/rekap',
+                'indexKasir'
+            )->name('rekap.index');
+
+            Route::get(
+                '/rekap/pdf',
+                'cetakPdfKasir'
+            )->name('rekap.pdf');
+
+        });
 });
 
 
@@ -170,17 +183,21 @@ Route::prefix('admin')
 
     });
 
-    Route::controller(RekapAdminController::class)->group(function () {
+   Route::controller(RekapAdminController::class)->group(function () {
 
-    Route::get(
+        Route::get(
+            '/rekap',
+            'index'
+        )->name('rekap.index');
 
-        '/rekap',
 
-        'index'
+        // CETAK PDF
+        Route::get(
+            '/rekap/pdf',
+            'cetakPdf'
+        )->name('rekap.pdf');
 
-    )->name('rekap.index');
-
-});
+    });
 });
 
 Route::get('/generate-rekap', [RekapController::class, 'generateRekapHarian']);

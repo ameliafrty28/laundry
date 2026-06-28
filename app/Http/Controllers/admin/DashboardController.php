@@ -37,7 +37,7 @@ class DashboardController extends Controller
                 now()->subDays($range)
             );
         }
-        // =========================================
+
         // TOTAL KPI
         // =========================================
 
@@ -53,17 +53,15 @@ class DashboardController extends Controller
         $rataPendapatan = (clone $query)
             ->avg('rekap_total_pendapatan');
 
-        // =========================================
         // DATA TERBARU
-        // =========================================
 
         $latest = (clone $query)
             ->latest('rekap_tanggal')
             ->first();
 
-        // =========================================
         // PREDIKSI BESOK
         // =========================================
+
 
         $model = DB::table('model_regresi')
             ->latest('tanggal_model')
@@ -93,7 +91,6 @@ class DashboardController extends Controller
             $prediksiBesok = max(0, $prediksiBesok);
         }
 
-        // =========================================
         // DATA GRAFIK PENDAPATAN
         // =========================================
 
@@ -124,7 +121,6 @@ class DashboardController extends Controller
             ->map(fn($v) => (int)$v)
             ->toArray();
 
-        // =========================================
         // KOMPOSISI LAYANAN
         // =========================================
 
@@ -140,7 +136,6 @@ class DashboardController extends Controller
         $expSatuan = (clone $query)
             ->sum('rekap_ekspres_satuan');
 
-        // =========================================
         // HARI TERAMAI
         // =========================================
 
@@ -158,7 +153,6 @@ class DashboardController extends Controller
         $hariData = $hariRamai
             ->pluck('total');
 
-        // =========================================
         // EVALUASI MODEL
         // =========================================
 
@@ -209,42 +203,40 @@ class DashboardController extends Controller
         $akurasi =
             max(0, 100 - $mape);
 
-// =========================================
-// DATA HISTORIS TABLE
-// =========================================
+        // DATA HISTORIS TABLE
+        // =========================================
 
-$rekap = DB::table('rekap_harian')
+        $rekap = DB::table('rekap_harian')
 
-    // FILTER JIKA TANGGAL DIPILIH
-    ->when(
+            // FILTER JIKA TANGGAL DIPILIH
+            ->when(
 
-        $tanggalAwal && $tanggalAkhir,
+                $tanggalAwal && $tanggalAkhir,
 
-        function ($query) use (
-            $tanggalAwal,
-            $tanggalAkhir
-        ) {
-
-            $query->whereBetween(
-                'rekap_tanggal',
-                [
+                function ($query) use (
                     $tanggalAwal,
                     $tanggalAkhir
-                ]
-            );
-        }
-    )
+                ) {
 
-    // URUTKAN DATA TERBARU
-    ->orderByDesc('rekap_tanggal')
+                    $query->whereBetween(
+                        'rekap_tanggal',
+                        [
+                            $tanggalAwal,
+                            $tanggalAkhir
+                        ]
+                    );
+                }
+            )
 
-    // PAGINATION
-    ->paginate(10)
+        // URUTKAN DATA TERBARU
+        ->orderByDesc('rekap_tanggal')
 
-    ->withQueryString();
+        // PAGINATION
+        ->paginate(10)
+
+        ->withQueryString();
 
 
-        // =========================================
         // RETURN VIEW
         // =========================================
 

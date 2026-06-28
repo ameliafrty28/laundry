@@ -150,7 +150,7 @@
     {{-- KPI SECTION --}}
     {{-- ===================================================== --}}
 
-    <div class="row g-4 mb-4">
+    <div class="row mt-3 mb-4">
 
         {{-- TOTAL PENDAPATAN --}}
         <div class="col-xl-3 col-md-6">
@@ -258,73 +258,89 @@
 
 
     {{-- ===================================================== --}}
-    {{-- MINI KPI SECTION --}}
-    {{-- ===================================================== --}}
+{{-- MINI KPI SECTION --}}
+{{-- ===================================================== --}}
 
-    <div class="row g-4 mb-5">
+<div class="row g-4 mb-5">
 
-        {{-- REGULER KILOAN --}}
-        <div class="col-xl-2 col-md-3 col-6">
+    {{-- REGULER KILOAN --}}
+    <div class="col-xl-3 col-md-6">
 
-            <div class="mini-kpi">
+        <div class="mini-kpi">
 
-                <p>Reguler Kiloan</p>
+            <p>Reguler Kiloan</p>
 
-                <h4>{{ $sumRegulerKiloan }}</h4>
+            <h4>{{ number_format($totalTransaksiRegKilo) }}</h4>
 
-            </div>
-
-        </div>
-
-
-        {{-- EKSPRES KILOAN --}}
-        <div class="col-xl-2 col-md-3 col-6">
-
-            <div class="mini-kpi">
-
-                <p>Ekspres Kiloan</p>
-
-                <h4>{{ $sumEkspresKiloan }}</h4>
-
-            </div>
-
-        </div>
-
-
-        {{-- REGULER SATUAN --}}
-        <div class="col-xl-2 col-md-3 col-6">
-
-            <div class="mini-kpi">
-
-                <p>Reguler Satuan</p>
-
-                <h4>{{ $sumRegulerSatuan }}</h4>
-
-            </div>
-
-        </div>
-
-
-        {{-- EKSPRES SATUAN --}}
-        <div class="col-xl-2 col-md-3 col-6">
-
-            <div class="mini-kpi">
-
-                <p>Ekspres Satuan</p>
-
-                <h4>{{ $sumEkspresSatuan }}</h4>
-
-            </div>
+            <small class="text-muted">
+                {{ number_format($sumRegulerKiloan,2) }} Kg
+            </small>
 
         </div>
 
     </div>
 
+
+    {{-- EKSPRES KILOAN --}}
+    <div class="col-xl-3 col-md-6">
+
+        <div class="mini-kpi">
+
+            <p>Ekspres Kiloan</p>
+
+            <h4>{{ number_format($totalTransaksiExpKilo) }}</h4>
+
+            <small class="text-muted">
+                {{ number_format($sumEkspresKiloan,2) }} Kg
+            </small>
+
+        </div>
+
+    </div>
+
+
+    {{-- REGULER SATUAN --}}
+    <div class="col-xl-3 col-md-6">
+
+        <div class="mini-kpi">
+
+            <p>Reguler Satuan</p>
+
+            <h4>{{ number_format($totalTransaksiRegSat) }}</h4>
+
+            <small class="text-muted">
+                {{ number_format($sumRegulerSatuan) }} Item
+            </small>
+
+        </div>
+
+    </div>
+
+
+    {{-- EKSPRES SATUAN --}}
+    <div class="col-xl-3 col-md-6">
+
+        <div class="mini-kpi">
+
+            <p>Ekspres Satuan</p>
+
+            <h4>{{ number_format($totalTransaksiExpSat) }}</h4>
+
+            <small class="text-muted">
+                {{ number_format($sumEkspresSatuan) }} Item
+            </small>
+
+        </div>
+
+    </div>
+
+</div> 
+
 {{-- ===================================================== --}}
 {{-- BUSINESS INSIGHT SECTION --}}
 {{-- ===================================================== --}}
 
-<div class="row g-4 mb-5">
+<div class="row g-3 mt-2 mb-4">
 
     {{-- MODEL --}}
     <div class="col-xl-6">
@@ -357,7 +373,7 @@
 
                     <b>{{ $statusModel }}</b>
 
-                    berdasarkan evaluasi RMSE.
+                    berdasarkan evaluasi MAPE.
 
                 </p>
 
@@ -396,7 +412,7 @@
 
                 <p class="insight-desc">
 
-                    Pendapatan tertinggi terjadi pada
+                    Pendapatan tertinggi tercatat pada
 
                     <b>{{ $tanggalPendapatanTertinggi }}</b>
 
@@ -412,13 +428,14 @@
 {{-- EXECUTIVE SUMMARY --}}
 {{-- ===================================================== --}}
 
-<div class="row mb-4">
+<div class="row g-3 mt-2 mb-4">
 
     <div class="col-12">
 
-        <div class="executive-summary">
+        <div class="analytics-card p-4">
 
-            <div class="summary-header">
+            {{-- HEADER --}}
+            <div class="d-flex justify-content-between align-items-center mb-3">
 
                 <div>
 
@@ -428,11 +445,11 @@
 
                     </span>
 
-                    <h4 class="summary-title">
+                    <h3 class="fw-bold mt-2 mb-0">
 
                         Business Intelligence Overview
 
-                    </h4>
+                    </h3>
 
                 </div>
 
@@ -444,19 +461,25 @@
 
             </div>
 
-            <div class="summary-content">
 
-                Dalam periode analisis ini, total pendapatan laundry mencapai
+            {{-- DESKRIPSI --}}
+            <div class="summary-content mb-4">
 
-                <b>
-                    Rp {{ number_format($sumPendapatan,0,',','.') }}
-                </b>
+                Pada periode
+
+                <b>{{ $periodeAwal }}</b>
+
+                sampai
+
+                <b>{{ $periodeAkhir }}</b>,
+
+                total pendapatan laundry mencapai
+
+                <b>Rp {{ number_format($sumPendapatan,0,',','.') }}</b>
 
                 dengan total
 
-                <b>
-                    {{ number_format($sumTransaksi) }}
-                </b>
+                <b>{{ number_format($sumTransaksi) }}</b>
 
                 transaksi.
 
@@ -470,7 +493,7 @@
 
                 Trend pendapatan menunjukkan kondisi
 
-                <b>
+                <b class="{{ $trendPendapatan == 'Meningkat' ? 'text-success' : 'text-danger' }}">
                     {{ $trendPendapatan }}
                 </b>
 
@@ -482,327 +505,115 @@
 
             </div>
 
-        </div>
 
-    </div>
+            <hr class="mb-4">
 
-</div>
 
+            {{-- INSIGHT CARD --}}
+            <div class="row g-3 mt-2 mb-4">
 
+                <div class="col-lg-3 col-md-6">
 
-{{-- ===================================================== --}}
-{{-- TARGET VS REALISASI --}}
-{{-- ===================================================== --}}
+                    <div class="mini-summary-card">
 
-<div class="row g-4 mb-4">
+                        <div class="text-muted mb-2">
 
-    <div class="col-xl-6">
-
-        <div class="analytics-card p-4 h-100">
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                <div>
-
-                    <h5 class="fw-bold mb-1">
-
-                        Target vs Realisasi
-
-                    </h5>
-
-                    <p class="text-muted mb-0">
-
-                        Perbandingan pendapatan aktual
-
-                    </p>
-
-                </div>
-
-                <i class="bi bi-bullseye fs-2 text-primary"></i>
-
-            </div>
-
-            @php
-
-                $persentaseTarget =
-                    ($sumPendapatan / $targetPendapatan) * 100;
-
-            @endphp
-
-            <div class="mb-3">
-
-                <div class="d-flex justify-content-between mb-2">
-
-                    <span class="fw-semibold">
-
-                        Target
-
-                    </span>
-
-                    <span>
-
-                        Rp {{ number_format($targetPendapatan,0,',','.') }}
-
-                    </span>
-
-                </div>
-
-                <div class="progress custom-progress">
-
-                    <div
-                        class="progress-bar bg-success"
-                        style="
-                            width:
-                            {{ min($persentaseTarget,100) }}%
-                        ">
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="d-flex justify-content-between">
-
-                <div>
-
-                    <small class="text-muted">
-
-                        Realisasi
-
-                    </small>
-
-                    <h4 class="fw-bold">
-
-                        Rp {{ number_format($sumPendapatan,0,',','.') }}
-
-                    </h4>
-
-                </div>
-
-                <div class="text-end">
-
-                    <small class="text-muted">
-
-                        Progress
-
-                    </small>
-
-                    <h4 class="fw-bold text-success">
-
-                        {{ number_format($persentaseTarget,1) }}%
-
-                    </h4>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    {{-- TREND ANALYSIS --}}
-    <div class="col-xl-6">
-
-        <div class="analytics-card p-4 h-100">
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                <div>
-
-                    <h5 class="fw-bold mb-1">
-
-                        Trend Analysis
-
-                    </h5>
-
-                    <p class="text-muted mb-0">
-
-                        Analisis tren pendapatan
-
-                    </p>
-
-                </div>
-
-                <i class="bi bi-graph-up-arrow fs-2 text-success"></i>
-
-            </div>
-
-            <div class="trend-analysis">
-
-                <div class="trend-item">
-
-                    <span class="trend-label">
-
-                        Trend Pendapatan
-
-                    </span>
-
-                    <h4 class="trend-value text-success">
-
-                        {{ $trendPendapatan }}
-
-                    </h4>
-
-                </div>
-
-                <div class="trend-item">
-
-                    <span class="trend-label">
-
-                        Growth Tertinggi
-
-                    </span>
-
-                    <h4 class="trend-value text-primary">
-
-                        {{ number_format($growthTertinggi,2) }}%
-
-                    </h4>
-
-                </div>
-
-                <div class="trend-item">
-
-                    <span class="trend-label">
-
-                        Hari Terbaik
-
-                    </span>
-
-                    <h4 class="trend-value text-danger">
-
-                        {{ $namaHariTeramai }}
-
-                    </h4>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-{{-- ===================================================== --}}
-{{-- INSIGHT OTOMATIS --}}
-{{-- ===================================================== --}}
-
-<div class="row g-4 mb-4">
-
-    <div class="col-12">
-
-        <div class="analytics-card p-4">
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-
-                <div>
-
-                    <h5 class="fw-bold mb-1">
-
-                        Smart Insight Analytics
-
-                    </h5>
-
-                    <p class="text-muted mb-0">
-
-                        Insight otomatis berdasarkan data historis
-
-                    </p>
-
-                </div>
-
-                <i class="bi bi-lightbulb-fill fs-2 text-warning"></i>
-
-            </div>
-
-            <div class="row g-3">
-
-                {{-- INSIGHT 1 --}}
-                <div class="col-xl-6">
-
-                    <div class="smart-insight insight-success">
-
-                        <i class="bi bi-arrow-up-circle-fill"></i>
-
-                        <div>
-
-                            Pendapatan menunjukkan tren
-
-                            <b>{{ $trendPendapatan }}</b>
-
-                            selama periode analisis.
+                            Pendapatan Tertinggi
 
                         </div>
+
+                        <h5 class="fw-bold text-primary">
+
+                            Rp {{ number_format($pendapatanTertinggi,0,',','.') }}
+
+                        </h5>
+
+                        <small>
+
+                            {{ $tanggalPendapatanTertinggi }}
+
+                        </small>
 
                     </div>
 
                 </div>
 
 
-                {{-- INSIGHT 2 --}}
-                <div class="col-xl-6">
+                <div class="col-lg-3 col-md-6">
 
-                    <div class="smart-insight insight-primary">
+                    <div class="mini-summary-card">
 
-                        <i class="bi bi-stars"></i>
+                        <div class="text-muted mb-2">
 
-                        <div>
-
-                            Layanan
-
-                            <b>{{ $layananTerlaris }}</b>
-
-                            mendominasi aktivitas laundry.
+                            Hari Teramai
 
                         </div>
+
+                        <h5 class="fw-bold text-danger">
+
+                            {{ $namaHariTeramai }}
+
+                        </h5>
+
+                        <small>
+
+                            Aktivitas transaksi tertinggi
+
+                        </small>
 
                     </div>
 
                 </div>
 
 
-                {{-- INSIGHT 3 --}}
-                <div class="col-xl-6">
+                <div class="col-lg-3 col-md-6">
 
-                    <div class="smart-insight insight-warning">
+                    <div class="mini-summary-card">
 
-                        <i class="bi bi-calendar-week-fill"></i>
+                        <div class="text-muted mb-2">
 
-                        <div>
-
-                            Hari paling ramai terjadi pada
-
-                            <b>{{ $namaHariTeramai }}</b>.
+                            Growth Tertinggi
 
                         </div>
+
+                        <h5 class="fw-bold text-success">
+
+                            {{ number_format($growthTertinggi,2) }}%
+
+                        </h5>
+
+                        <small>
+
+                            Pertumbuhan pendapatan
+
+                        </small>
 
                     </div>
 
                 </div>
 
 
-                {{-- INSIGHT 4 --}}
-                <div class="col-xl-6">
+                <div class="col-lg-3 col-md-6">
 
-                    <div class="smart-insight insight-danger">
+                    <div class="mini-summary-card">
 
-                        <i class="bi bi-cpu-fill"></i>
+                        <div class="text-muted mb-2">
 
-                        <div>
-
-                            Model prediksi memiliki tingkat akurasi
-
-                            <b>{{ number_format($akurasi,2) }}%</b>.
+                            Status Model
 
                         </div>
+
+                        <h5 class="fw-bold text-warning">
+
+                            {{ $statusModel }}
+
+                        </h5>
+
+                        <small>
+
+                            Akurasi {{ number_format($akurasi,2) }}%
+
+                        </small>
 
                     </div>
 
@@ -815,8 +626,6 @@
     </div>
 
 </div>
-
-
 
 {{-- ===================================================== --}}
 {{-- AKTUAL VS PREDIKSI TABLE --}}
@@ -858,14 +667,12 @@
                         <tr>
 
                             <th>Tanggal</th>
+                            
+                            <th>Prediksi</th>
 
                             <th>Aktual</th>
 
-                            <th>Prediksi</th>
-
                             <th>Selisih</th>
-
-                            <th>Status</th>
 
                         </tr>
 
@@ -885,41 +692,19 @@
 
                             <td>
 
-                                Rp {{ number_format($item['aktual'],0,',','.') }}
-
-                            </td>
-
-                            <td>
-
                                 Rp {{ number_format($item['prediksi'],0,',','.') }}
 
                             </td>
 
                             <td>
 
-                                Rp {{ number_format($item['selisih'],0,',','.') }}
+                                Rp {{ number_format($item['aktual'],0,',','.') }}
 
                             </td>
 
                             <td>
 
-                                @if($item['selisih'] < 50000)
-
-                                    <span class="badge bg-success px-3 py-2">
-
-                                        Baik
-
-                                    </span>
-
-                                @else
-
-                                    <span class="badge bg-warning text-dark px-3 py-2">
-
-                                        Perlu Evaluasi
-
-                                    </span>
-
-                                @endif
+                                Rp {{ number_format($item['selisih'],0,',','.') }}
 
                             </td>
 
@@ -1367,7 +1152,7 @@ body {
 
     height: 100%;
 
-    padding: 28px;
+    padding: 20px;
 }
 
 .analytics-card:hover,
@@ -1626,7 +1411,12 @@ body {
 
     color: #111827;
 }
-
+.executive-summary{
+    background: #fff;
+    border-radius: 30px;
+    padding: 30px;
+    margin-top: 30px;     /* tambahkan ini */
+}
 /* =========================================================
    INSIGHT CARD
 ========================================================= */
@@ -1960,7 +1750,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const hariValues        = @json($hariValues);
 
-
+    const transaksiRegKilo = @json($transaksiRegKilo);
+    
+    const transaksiExpKilo = @json($transaksiExpKilo);
+    
+    const transaksiRegSat  = @json($transaksiRegSat);
+    
+    const transaksiExpSat  = @json($transaksiExpSat);
 
     // =====================================================
     // COLOR PALETTE
@@ -2213,7 +2009,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     label: 'Reg Kilo',
 
-                    data: regulerKiloan,
+                    data: transaksiRegKilo,
 
                     backgroundColor: colors.success,
 
@@ -2224,7 +2020,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     label: 'Exp Kilo',
 
-                    data: ekspresKiloan,
+                    data: transaksiExpKilo,
 
                     backgroundColor: colors.warning,
 
@@ -2235,7 +2031,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     label: 'Reg Sat',
 
-                    data: regulerSatuan,
+                    data: transaksiRegSat,
 
                     backgroundColor: colors.purple,
 
@@ -2246,7 +2042,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     label: 'Exp Sat',
 
-                    data: ekspresSatuan,
+                    data: transaksiExpSat,
 
                     backgroundColor: colors.pink,
 
@@ -2486,7 +2282,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    // =====================================================
+   // =====================================================
     // 7. TOP LAYANAN
     // =====================================================
 
@@ -2510,10 +2306,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     data: [
 
-                        {{ $sumRegulerKiloan }},
-                        {{ $sumEkspresKiloan }},
-                        {{ $sumRegulerSatuan }},
-                        {{ $sumEkspresSatuan }}
+                        {{ $totalTransaksiRegKilo }},
+                        {{ $totalTransaksiExpKilo }},
+                        {{ $totalTransaksiRegSat }},
+                        {{ $totalTransaksiExpSat }}
                     ],
 
                     backgroundColor: [
@@ -2535,7 +2331,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
     }, 'polarArea');
-
+    
     // =====================================================
     // 8. HARI TERAMAI
     // =====================================================

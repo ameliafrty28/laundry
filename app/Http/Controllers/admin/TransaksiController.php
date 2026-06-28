@@ -9,6 +9,7 @@ use App\Models\Layanan;
 use App\Models\Pelanggan;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TransaksiController extends Controller
 {
@@ -148,16 +149,22 @@ class TransaksiController extends Controller
             ]);
 
             $transaksi = Transaksi::create([
-                'user_id' => auth()->user()->user_id ?? 1,
-                'pelanggan_id' => $request->pelanggan_id,
-                'transaksi_tanggal' => $request->transaksi_tanggal, // 🔥 FIX
-                'transaksi_total' => $total,
-                'transaksi_dibayar' => $dibayar,
-                'transaksi_sisa' => $sisa,
-                'transaksi_status_pembayaran' => $status,
-                'transaksi_metode_pembayaran' => $mode == 'sekarang' ? $request->metode : null,
-                'transaksi_status_pesanan' => 'proses'
-            ]);
+            'user_id' => auth()->user()->user_id ?? 1,
+            'pelanggan_id' => $request->pelanggan_id,
+
+            'transaksi_tanggal' =>
+                Carbon::parse($request->transaksi_tanggal)
+                    ->setTimeFrom(now()),
+
+            'transaksi_total' => $total,
+            'transaksi_dibayar' => $dibayar,
+            'transaksi_sisa' => $sisa,
+            'transaksi_status_pembayaran' => $status,
+            'transaksi_metode_pembayaran' => $mode == 'sekarang'
+                ? $request->metode
+                : null,
+            'transaksi_status_pesanan' => 'proses'
+        ]);
             foreach ($request->layanan_id as $i => $id) {
                 DetailTransaksi::create([
                     'transaksi_id' => $transaksi->transaksi_id,

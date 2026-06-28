@@ -11,17 +11,13 @@ class PrediksiController extends Controller
 {
     public function index(Request $request)
     {
-        // =====================================
+    
         // INPUT JUMLAH HARI PREDIKSI
-        // =====================================
-
+    
         $hari = $request->input('hari', 7);
 
-        // =====================================
-        // AMBIL DATA HISTORIS
-        // SEMUA DATA
-        // =====================================
-
+       
+        // AMBIL DATA HISTORIS SEMUA DATA
         $historis = DB::table('rekap_harian')
             ->orderBy('rekap_tanggal')
             ->get();
@@ -34,9 +30,7 @@ class PrediksiController extends Controller
             );
         }
 
-        // =====================================
         // AMBIL MODEL REGRESI TERBARU
-        // =====================================
 
         $model = DB::table('model_regresi')
             ->orderByDesc('tanggal_model')
@@ -50,10 +44,7 @@ class PrediksiController extends Controller
             );
         }
 
-        // =====================================
-        // AMBIL 7 DATA TERAKHIR
-        // UNTUK MOVING AVERAGE
-        // =====================================
+        // AMBIL 7 DATA TERAKHIR UNTUK MOVING AVERAGE
 
         $rollingData = $historis
             ->take(-7)
@@ -81,10 +72,7 @@ class PrediksiController extends Controller
             ->values()
             ->toArray();
 
-        // =====================================
-        // FORECAST MULTI HARI
-        // ITERATIVE FORECASTING
-        // =====================================
+        // FORECAST MULTI HARI ITERATIVE FORECASTING
 
         $hasilPrediksi = [];
 
@@ -96,9 +84,7 @@ class PrediksiController extends Controller
 
         for ($i = 1; $i <= $hari; $i++) {
 
-            // =================================
             // MOVING AVERAGE 7 HARI
-            // =================================
 
             $x1 =
                 collect($rollingData)
@@ -116,9 +102,7 @@ class PrediksiController extends Controller
                 collect($rollingData)
                 ->avg('ekspres_satuan');
 
-            // =================================
             // HITUNG PREDIKSI REGRESI
-            // =================================
 
             $forecast =
                 $model->konstanta +
@@ -127,15 +111,12 @@ class PrediksiController extends Controller
                 ($model->b_reguler_satuan * $x3) +
                 ($model->b_ekspres_satuan * $x4);
 
-            // =================================
+
             // VALIDASI NILAI NEGATIF
-            // =================================
 
             $forecast = max(0, $forecast);
 
-            // =================================
             // SIMPAN HASIL PREDIKSI
-            // =================================
 
             $hasilPrediksi[] = [
 
@@ -160,64 +141,40 @@ class PrediksiController extends Controller
                     round($x4, 2)
             ];
 
-            // =================================
+
             // TOTAL PREDIKSI
-            // =================================
 
             $totalPrediksi += $forecast;
 
-            // =================================
             // UPDATE ROLLING DATA
             // =================================
 
             array_shift($rollingData);
 
-            // =================================
-            // SIMULASI DATA BARU
-            // AGAR LEBIH DINAMIS
+            // SIMULASI DATA BARU AGAR LEBIH DINAMIS
             // =================================
 
             $rollingData[] = [
 
-                'reguler_kiloan' =>
-                    round(
-                        $x1 * rand(95, 105) / 100,
-                        2
-                    ),
+                'reguler_kiloan' => round($x1, 2),
 
-                'ekspres_kiloan' =>
-                    round(
-                        $x2 * rand(95, 105) / 100,
-                        2
-                    ),
+                'ekspres_kiloan' => round($x2, 2),
 
-                'reguler_satuan' =>
-                    round(
-                        $x3 * rand(95, 105) / 100,
-                        2
-                    ),
+                'reguler_satuan' => round($x3, 2),
 
-                'ekspres_satuan' =>
-                    round(
-                        $x4 * rand(95, 105) / 100,
-                        2
-                    ),
+                'ekspres_satuan' => round($x4, 2),
 
-                'pendapatan' =>
-                    $forecast
+                'pendapatan' => round($forecast, 2)
             ];
         }
 
-        // =====================================
         // PREDIKSI HARI PERTAMA
         // =====================================
 
         $prediksiHarian =
             $hasilPrediksi[0]['prediksi'];
 
-        // =====================================
-        // EVALUASI MODEL
-        // MENGGUNAKAN SEMUA DATA
+        // EVALUASI MODEL MENGGUNAKAN SEMUA DATA
         // =====================================
 
         $allData = DB::table('rekap_harian')
@@ -253,7 +210,6 @@ class PrediksiController extends Controller
             }
         }
 
-        // =====================================
         // HITUNG MSE
         // =====================================
 
@@ -262,13 +218,11 @@ class PrediksiController extends Controller
             ? $totalErrorKuadrat / count($allData)
             : 0;
 
-        // =====================================
         // HITUNG RMSE
         // =====================================
 
         $rmse = sqrt($mse);
 
-        // =====================================
         // HITUNG MAPE
         // =====================================
 
@@ -277,14 +231,12 @@ class PrediksiController extends Controller
             ? ($totalAPE / count($allData)) * 100
             : 0;
 
-        // =====================================
         // HITUNG AKURASI
         // =====================================
 
         $akurasi =
             max(0, 100 - $mape);
 
-        // =====================================
         // STATUS MODEL
         // =====================================
 
@@ -305,8 +257,7 @@ class PrediksiController extends Controller
             $statusModel = 'Kurang Baik';
         }
 
-        // =====================================
-        // DATA GRAFIK
+         // DATA GRAFIK
         // =====================================
 
         $chartData = DB::table('rekap_harian')

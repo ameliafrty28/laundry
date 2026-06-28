@@ -426,6 +426,24 @@
         </a>
 
     </li>
+    {{-- REKAP --}}
+    <li class="sidebar-item">
+
+        <a
+            class="sidebar-link"
+            href="/admin/rekap">
+
+            <i class="ti ti-file-analytics"></i>
+
+            <span>
+
+                Rekap Harian
+
+            </span>
+
+        </a>
+
+    </li>
 
     {{-- LOGOUT --}}
     <li class="sidebar-item mt-4">
