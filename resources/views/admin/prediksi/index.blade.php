@@ -22,14 +22,7 @@
             </p>
 
         </div>
-        <div class="text-end">
-
-            <span class="badge bg-light text-dark px-3 py-2 rounded-pill">
-                <i class="bi bi-cpu me-1"></i>
-                Auto Retraining Model
-            </span>
-
-        </div>
+     
     </div>
 
 
@@ -60,21 +53,6 @@
 
                 </div>
 
-                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-
-                    <div class="d-flex justify-content-lg-end gap-2 flex-wrap">
-
-                        <span class="badge bg-success px-3 py-2 rounded-pill">
-                            Auto ETL
-                        </span>
-
-                        <span class="badge bg-primary px-3 py-2 rounded-pill">
-                            Dynamic Model
-                        </span>
-
-                    </div>
-
-                </div>
 
             </div>
 

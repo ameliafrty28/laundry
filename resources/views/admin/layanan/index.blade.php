@@ -171,21 +171,13 @@
 
                         <td>
 
-                            <span class="badge bg-info px-3 py-2">
-
                                 {{ $d->layanan_jenis }}
-
-                            </span>
-
+        
                         </td>
 
                         <td>
 
-                            <span class="badge bg-secondary px-3 py-2">
-
                                 {{ $d->layanan_tipe }}
-
-                            </span>
 
                         </td>
 

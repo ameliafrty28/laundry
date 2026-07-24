@@ -41,8 +41,7 @@ class TransaksiController extends Controller
                 );
             })
 
-            ->latest()
-
+->orderBy('transaksi_tanggal', 'desc')
             // PAGINATION
             ->paginate(20)
 

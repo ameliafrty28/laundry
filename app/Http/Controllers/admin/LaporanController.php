@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Pagination\LengthAwarePaginator; use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator; 
+
 
 class LaporanController extends Controller
 {
@@ -485,31 +486,52 @@ class LaporanController extends Controller
         
 
     // =====================================================
-    // TREND PENDAPATAN
-    // =====================================================
+// TREND PENDAPATAN BERDASARKAN MOVING AVERAGE 7 HARI
+// =====================================================
 
-    $trendPendapatan = 'Stabil';
+$trendPendapatan = 'Stabil';
 
-    if (count($pendapatan) >= 2) {
+// Ambil hanya nilai Moving Average yang valid (bukan null)
+$maValid = array_values(
+    array_filter($ma7, function ($nilai) {
+        return $nilai !== null;
+    })
+);
 
-        $first =
-            $pendapatan[0];
+// Jika data MA minimal 2 titik
+if (count($maValid) >= 2) {
 
-        $last =
-            end($pendapatan);
+    $awal = $maValid[0];
+    $akhir = end($maValid);
 
-        if ($last > $first) {
+    if ($akhir > $awal) {
 
-            $trendPendapatan =
-                'Meningkat';
-        }
+        $trendPendapatan = 'Meningkat';
 
-        elseif ($last < $first) {
+    } elseif ($akhir < $awal) {
 
-            $trendPendapatan =
-                'Menurun';
-        }
+        $trendPendapatan = 'Menurun';
+
+    } else {
+
+        $trendPendapatan = 'Stabil';
     }
+
+} elseif (count($pendapatan) >= 2) {
+
+    // Jika data kurang dari 7 hari, gunakan data pendapatan langsung
+    $awal = $pendapatan[0];
+    $akhir = end($pendapatan);
+
+    if ($akhir > $awal) {
+
+        $trendPendapatan = 'Meningkat';
+
+    } elseif ($akhir < $awal) {
+
+        $trendPendapatan = 'Menurun';
+    }
+}
 
 
 
@@ -522,16 +544,7 @@ class LaporanController extends Controller
 
 
 
-    // =====================================================
-    // TARGET DINAMIS
-    // =====================================================
-
-    $targetPendapatan =
-
-        ($rataPendapatan * $jumlahHari)
-
-        * 1.10;
-
+ 
     // =====================================================
     // PERBANDINGAN PREDIKSI
     // =====================================================
@@ -660,7 +673,6 @@ class LaporanController extends Controller
 
             'layananTerlaris',
             'trendPendapatan',
-            'targetPendapatan',
             'perbandinganPrediksi',
             'totalTransaksiRegKilo',
             'totalTransaksiExpKilo',

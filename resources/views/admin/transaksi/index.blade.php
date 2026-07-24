@@ -290,7 +290,7 @@
 
                             @if($d->transaksi_status_pembayaran == 'lunas')
 
-                                <span class="badge bg-success">
+                                <span >
 
                                     Lunas
 
@@ -298,7 +298,7 @@
 
                             @else
 
-                                <span class="badge bg-danger">
+                                <span >
 
                                     Belum Lunas
 
@@ -313,28 +313,22 @@
                         {{-- STATUS PESANAN --}}
                         <td>
 
-                            @if($d->transaksi_status_pesanan == 'proses')
+                           @if($d->transaksi_status_pesanan == 'proses')
 
-                                <span class="badge bg-warning text-dark">
-
+                                <span >
                                     Proses
-
                                 </span>
 
                             @elseif($d->transaksi_status_pesanan == 'selesai')
 
-                                <span class="badge bg-info">
-
+                                <span >
                                     Selesai
-
                                 </span>
 
                             @elseif($d->transaksi_status_pesanan == 'diambil')
 
-                                <span class="badge bg-secondary">
-
+                                <span >
                                     Diambil
-
                                 </span>
 
                             @endif

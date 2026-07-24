@@ -1717,6 +1717,9 @@ canvas {
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<script>Chart.register(ChartDataLabels);</script>
 
 <script>
 
@@ -1801,7 +1804,9 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         plugins: {
-
+            datalabels: {
+                display: false
+            },
             legend: {
 
                 position: 'top',
@@ -2058,67 +2063,143 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // =====================================================
-    // 3. KOMPOSISI LAYANAN
-    // =====================================================
+// 3. KOMPOSISI LAYANAN
+// =====================================================
 
-    createChart('chartPie', {
+createChart('chartPie', {
 
-        type: 'doughnut',
+    type: 'doughnut',
 
-        data: {
+    data: {
 
-            labels: [
+        labels: [
+            'Reg Kilo',
+            'Exp Kilo',
+            'Reg Sat',
+            'Exp Sat'
+        ],
 
-                'Reg Kilo',
-                'Exp Kilo',
-                'Reg Sat',
-                'Exp Sat'
-            ],
+        datasets: [
 
-            datasets: [
+            {
 
-                {
+                data: [
 
-                    data: [
+                    {{ $sumRegulerKiloan }},
+                    {{ $sumEkspresKiloan }},
+                    {{ $sumRegulerSatuan }},
+                    {{ $sumEkspresSatuan }}
 
-                        {{ $sumRegulerKiloan }},
-                        {{ $sumEkspresKiloan }},
-                        {{ $sumRegulerSatuan }},
-                        {{ $sumEkspresSatuan }}
-                    ],
+                ],
 
-                    backgroundColor: [
+                backgroundColor: [
 
-                        colors.primary,
-                        colors.success,
-                        colors.warning,
-                        colors.purple
-                    ],
+                    colors.primary,
+                    colors.success,
+                    colors.warning,
+                    colors.purple
 
-                    borderWidth: 0
-                }
-            ]
+                ],
+
+                borderWidth: 0
+
+            }
+
+        ]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        cutout: '60%',
+
+        plugins: {
+
+            legend: {
+
+                position: 'bottom'
+
+            },
+            datalabels: {
+
+        display: true,
+
+        color: '#fff',
+
+        font: {
+
+            weight: 'bold',
+
+            size: 13
+
         },
 
-        options: {
+        formatter: function(value, context) {
 
-            responsive: true,
+            const data = context.chart.data.datasets[0].data;
 
-            maintainAspectRatio: false,
+            const total = data.reduce((a, b) => a + b, 0);
 
-            cutout: '60%',
+            return ((value / total) * 100).toFixed(1) + "%";
 
-            plugins: {
-
-                legend: {
-
-                    position: 'bottom'
-                }
-            }
         }
 
-    }, 'doughnut');
+    },
 
+            tooltip: {
+
+                callbacks: {
+
+                    label: function(context) {
+
+                        return context.label + ': ' + context.raw;
+
+                        // Jika ingin menambahkan satuan:
+                        // return context.label + ': ' + context.raw + ' Kg';
+                        // atau
+                        // return context.label + ': ' + context.raw + ' Item';
+
+                    }
+
+                }
+
+            },
+
+            datalabels: {
+
+                color: '#ffffff',
+
+                font: {
+
+                    weight: 'bold',
+
+                    size: 13
+
+                },
+
+                formatter: function(value, context) {
+
+                    const data = context.chart.data.datasets[0].data;
+
+                    const total = data.reduce((sum, current) => sum + current, 0);
+
+                    const percentage = ((value / total) * 100).toFixed(1);
+
+                    return percentage + '%';
+
+                }
+
+            }
+
+        }
+
+    }
+
+}, 'doughnut');
 
 
     // =====================================================
